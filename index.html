@@ -1,0 +1,1458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Austin Powerlifting</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@300;400;500&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #111214;
+  --s1: #18191c;
+  --s2: #1f2024;
+  --s3: #26272c;
+  --s4: #2e2f35;
+  --border: #2e2f35;
+  --border2: #3a3b42;
+  --text: #e8e8ea;
+  --muted: #595b63;
+  --dim: #38393f;
+  --accent: #d42b2b;
+  --accent-bright: #ff3333;
+  --accent-dim: rgba(212,43,43,.15);
+  --accent-border: rgba(212,43,43,.35);
+  --orange: #e84a1a;
+  --red: #ff3333;
+  --green: #3ecf6e;
+  --yellow: #e8b84b;
+  --blue: #4a9eff;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;-webkit-font-smoothing:antialiased}
+#root{height:100%;display:flex;flex-direction:column}
+
+/* ── GATE ── */
+.gate{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:32px;position:relative;overflow:hidden}
+.gate::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 59px,rgba(255,255,255,.012) 59px,rgba(255,255,255,.012) 60px),repeating-linear-gradient(90deg,transparent,transparent 59px,rgba(255,255,255,.012) 59px,rgba(255,255,255,.012) 60px)}.gate::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-60%);width:600px;height:400px;background:radial-gradient(ellipse at center,rgba(212,43,43,.09) 0%,transparent 70%);pointer-events:none}
+.gate-logo{text-align:center}
+.gate-logo-main{font-family:'Barlow Condensed',sans-serif;font-size:88px;font-weight:900;letter-spacing:-2px;line-height:1;color:var(--text);text-shadow:none}.gate-logo-main span{color:var(--accent)}
+.gate-logo-sub{font-family:'Share Tech Mono',monospace;font-size:13px;letter-spacing:6px;color:var(--muted);text-transform:uppercase;margin-top:4px}
+.gate-form{display:flex;flex-direction:column;align-items:center;gap:16px}
+.gate-pw-row{display:flex}
+.gate-pw{background:var(--s2);border:1px solid var(--border);border-right:none;color:var(--text);font-family:'Share Tech Mono',monospace;font-size:28px;padding:12px 20px;width:160px;text-align:center;letter-spacing:10px;outline:none;transition:border-color .15s}
+.gate-pw:focus{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent-border)}
+.gate-go{background:var(--accent);border:none;color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;letter-spacing:3px;padding:12px 28px;cursor:pointer;transition:all .15s;text-transform:uppercase}.gate-go:hover{background:var(--accent-bright);opacity:1}
+.gate-go:hover{opacity:.88}
+.gate-err{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--red);letter-spacing:2px}
+
+/* ── TOPBAR ── */
+.topbar{background:var(--s1);border-bottom:1px solid var(--border);border-top:3px solid var(--accent);padding:0 20px;display:flex;align-items:stretch;gap:0;position:sticky;top:0;z-index:200;height:55px}
+.topbar-brand{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:900;color:var(--text);letter-spacing:1px;display:flex;align-items:center;padding-right:24px;border-right:1px solid var(--border)}.topbar-brand em{color:var(--accent);font-style:normal}
+.topbar-brand span{color:var(--muted);font-weight:400;margin-left:3px}
+.topbar-nav{display:flex;align-items:stretch;flex:1;overflow-x:auto}
+.tnav{background:none;border:none;color:var(--muted);cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:600;letter-spacing:2px;padding:0 18px;text-transform:uppercase;transition:color .15s;border-bottom:3px solid transparent;white-space:nowrap}
+.tnav:hover{color:var(--text)}
+.tnav.active{color:var(--accent);border-bottom-color:var(--accent)}
+.topbar-right{display:flex;align-items:center;gap:8px;margin-left:auto;padding-left:16px;border-left:1px solid var(--border)}
+.maxes-strip{display:flex;gap:16px;align-items:center}
+.max-item{text-align:center}
+.max-label{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
+.max-val{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;color:var(--text)}
+
+/* ── WEEK BAR ── */
+.weekbar{background:var(--s1);border-bottom:1px solid var(--border);display:flex;padding:0 12px;overflow-x:auto;gap:2px}
+.wpill{background:none;border:none;border-bottom:3px solid transparent;color:var(--muted);cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:600;letter-spacing:2px;padding:10px 14px 8px;text-transform:uppercase;transition:all .15s;white-space:nowrap}
+.wpill:hover{color:var(--text)}
+.wpill.active{color:var(--accent);border-bottom-color:var(--accent)}
+.wpill.hasdata{color:var(--green)}
+.wpill.hasdata.active{color:var(--accent)}
+
+/* ── MAIN ── */
+.main{flex:1;padding:16px 20px;max-width:1000px;width:100%;margin:0 auto}
+.sec-head{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;letter-spacing:2px;color:var(--text);margin-bottom:16px;text-transform:uppercase;border-left:4px solid var(--accent);padding-left:12px}
+
+/* ── DAY CARD ── */
+.day-card{border:1px solid var(--border);border-left:3px solid var(--dim);margin-bottom:8px;background:var(--s1);transition:border-left-color .15s}.day-card:hover{border-left-color:var(--accent)}
+.day-hdr{display:flex;align-items:center;gap:12px;padding:10px 14px;cursor:pointer;user-select:none;transition:background .1s}
+.day-hdr:hover{background:var(--s2)}
+.day-status{width:7px;height:7px;border-radius:50%;background:var(--dim);flex-shrink:0;transition:background .2s}
+.day-status.done{background:var(--green)}
+.day-status.partial{background:var(--yellow)}
+.day-hdr-text{flex:1}
+.day-name{font-family:'Barlow Condensed',sans-serif;font-size:19px;font-weight:700;letter-spacing:2px;color:var(--text);text-transform:uppercase}
+.day-desc{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:1px;margin-top:1px}
+.day-rpe-badge{font-family:'Share Tech Mono',monospace;font-size:11px;padding:3px 8px;border:1px solid;margin-right:4px}
+.day-rpe-badge.low{color:var(--green);border-color:var(--green)}
+.day-rpe-badge.mid{color:var(--yellow);border-color:var(--yellow)}
+.day-rpe-badge.high{color:var(--red);border-color:var(--red)}
+.day-chev{color:var(--muted);font-size:11px;transition:transform .2s}
+.day-chev.open{transform:rotate(180deg)}
+
+/* ── READINESS ── */
+.readiness-row{display:flex;gap:0;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.read-field{display:flex;flex-direction:column;padding:8px 14px;border-right:1px solid var(--border);min-width:100px}
+.read-label{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:3px}
+.read-input{background:none;border:none;color:var(--accent);font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;outline:none;width:80px}
+.read-input::placeholder{color:var(--dim)}
+
+/* ── EXERCISE TABLE ── */
+.ex-section{padding:4px 0 12px}
+.ex-row{display:grid;grid-template-columns:200px 80px repeat(4,1fr) 80px 80px 32px;gap:0;border-bottom:1px solid #1a1a1a;align-items:start;padding:6px 0}
+.ex-row:last-child{border-bottom:none}
+.ex-th{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--muted);letter-spacing:1px;padding:4px 10px;text-transform:uppercase;border-bottom:1px solid var(--border);display:flex;align-items:center}
+.ex-thead{display:grid;grid-template-columns:200px 80px repeat(4,1fr) 80px 80px 32px;background:var(--s2)}
+.ex-name-cell{padding:6px 10px;display:flex;flex-direction:column;gap:3px}
+.ex-name{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:600;letter-spacing:.5px;color:var(--text);cursor:pointer;transition:color .1s}
+.ex-name:hover{color:var(--accent)}
+.ex-note{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--yellow);margin-top:1px}
+.ex-actions{display:flex;gap:4px;margin-top:3px}
+.ex-btn{background:none;border:1px solid var(--border);color:var(--muted);cursor:pointer;font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:1px;padding:2px 6px;transition:all .12s}
+.ex-btn:hover{border-color:var(--accent);color:var(--accent)}
+.ex-btn.danger:hover{border-color:var(--red);color:var(--red)}
+.target-rpe-cell{padding:6px 10px;font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--muted);display:flex;align-items:flex-start;padding-top:8px}
+
+/* ── SET CELL ── */
+.set-cell{padding:4px 6px;display:flex;flex-direction:column;gap:2px}
+.set-inputs{display:flex;gap:3px;align-items:center}
+.kg-input{background:var(--s3);border:1px solid var(--border);color:var(--text);font-family:'Share Tech Mono',monospace;font-size:12px;padding:4px 5px;width:54px;text-align:center;outline:none;transition:border-color .12s}
+.kg-input:focus{border-color:var(--accent)}
+.set-reps{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:.5px;text-align:center}
+.set-empty{opacity:.35;font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);padding:8px 10px}
+
+/* ── RPE CELL ── */
+.rpe-cell{padding:4px 6px;display:flex;align-items:flex-start;padding-top:6px}
+.rpe-input{background:var(--s3);border:1px solid var(--border);color:var(--text);font-family:'Share Tech Mono',monospace;font-size:13px;padding:5px 6px;width:56px;text-align:center;outline:none;transition:all .12s}
+.rpe-input:focus{border-color:var(--accent)}
+.rpe-input.g{border-color:var(--green);color:var(--green)}
+.rpe-input.y{border-color:var(--yellow);color:var(--yellow)}
+.rpe-input.r{border-color:var(--red);color:var(--red)}
+
+/* ── SIGNAL ── */
+.signal-cell{padding:4px 6px;display:flex;align-items:flex-start;padding-top:8px}
+.sig{font-family:'Share Tech Mono',monospace;font-size:9px;padding:3px 6px;border:1px solid;letter-spacing:.5px;text-transform:uppercase;white-space:nowrap}
+.sig.up{color:var(--green);border-color:var(--green);background:rgba(0,230,118,.05)}
+.sig.hold{color:var(--yellow);border-color:var(--yellow);background:rgba(255,214,0,.05)}
+.sig.down{color:var(--red);border-color:var(--red);background:rgba(255,45,45,.05)}
+.sig.none{color:var(--dim);border-color:var(--dim)}
+
+/* ── KG BAR VIZ ── */
+.bar-viz{margin:4px 6px 2px;padding:6px 8px;background:var(--s2);border:1px solid var(--border)}
+.bar-viz-inner{display:flex;align-items:center;gap:2px}
+.bv-bar{width:28px;height:22px;background:var(--dim);border-radius:1px;position:relative;display:flex;align-items:center;justify-content:center;font-family:'Share Tech Mono',monospace;font-size:8px;color:#000;font-weight:600}
+.bv-plate{height:100%;border-radius:1px;display:flex;align-items:center;justify-content:center;font-family:'Share Tech Mono',monospace;font-size:7px;font-weight:600;color:#000;min-width:6px;flex-shrink:0}
+.bv-collar{width:4px;height:28px;background:#444;border-radius:1px}
+.bv-total{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;color:var(--text);margin-left:8px;white-space:nowrap}
+.bv-plates-text{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);margin-top:3px}
+
+/* ── DELETE SET / ADD SET ── */
+.add-set-btn{background:none;border:1px dashed var(--border);color:var(--muted);cursor:pointer;font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:1px;padding:5px 14px;transition:all .12s;margin:4px 10px;display:inline-block}
+.add-set-btn:hover{border-color:var(--accent);color:var(--accent)}
+.del-set-btn{background:none;border:none;color:var(--dim);cursor:pointer;font-size:14px;padding:0 2px;line-height:1;transition:color .12s}
+.del-set-btn:hover{color:var(--red)}
+
+/* ── VIDEO UPLOAD ── */
+.video-section{padding:8px 10px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.video-label{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
+.video-upload-btn{background:none;border:1px dashed var(--border2);color:var(--muted);cursor:pointer;font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:1px;padding:5px 12px;transition:all .12s}
+.video-upload-btn:hover{border-color:var(--orange);color:var(--orange)}
+.video-thumb{position:relative;display:inline-block}
+.video-thumb video{height:54px;width:auto;border:1px solid var(--border2);display:block;cursor:pointer}
+.video-thumb-del{position:absolute;top:-5px;right:-5px;background:var(--red);border:none;color:#fff;cursor:pointer;width:16px;height:16px;font-size:9px;display:flex;align-items:center;justify-content:center;line-height:1}
+.video-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px}
+.video-modal-inner{max-width:90vw;max-height:90vh;position:relative}
+.video-modal-inner video{max-width:100%;max-height:80vh;display:block}
+.video-modal-close{position:absolute;top:-32px;right:0;background:none;border:1px solid var(--border2);color:var(--text);cursor:pointer;font-family:'Share Tech Mono',monospace;font-size:11px;padding:4px 10px}
+
+/* ── REST DAY ── */
+.rest-day{padding:20px 14px;font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--dim);letter-spacing:3px}
+
+/* ── MODAL ── */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:300;display:flex;align-items:center;justify-content:center;padding:20px}
+.modal{background:var(--s2);border:1px solid var(--border2);padding:24px;width:100%;max-width:520px;max-height:88vh;overflow-y:auto}
+.modal-title{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:900;color:var(--text);letter-spacing:2px;text-transform:uppercase;margin-bottom:18px;padding-bottom:10px;border-bottom:2px solid var(--accent)}
+.mfield{margin-bottom:14px}
+.mlabel{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:5px}
+.minput{width:100%;background:var(--s3);border:1px solid var(--border);color:var(--text);font-family:'Barlow',sans-serif;font-size:14px;padding:8px 12px;outline:none;transition:border-color .12s}
+.minput:focus{border-color:var(--accent)}
+.mselect{width:100%;background:var(--s3);border:1px solid var(--border);color:var(--text);font-family:'Barlow',sans-serif;font-size:14px;padding:8px 12px;outline:none;cursor:pointer}
+.mactions{display:flex;gap:8px;margin-top:20px}
+.mbtn-save{background:var(--accent);border:none;color:#fff;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;letter-spacing:2px;padding:10px 24px;transition:opacity .12s}
+.mbtn-save:hover{opacity:.88}
+.mbtn-cancel{background:none;border:1px solid var(--border2);color:var(--muted);cursor:pointer;font-family:'Share Tech Mono',monospace;font-size:11px;padding:10px 16px;transition:all .12s}
+.mbtn-cancel:hover{border-color:var(--text);color:var(--text)}
+.mbtn-danger{background:none;border:1px solid var(--red);color:var(--red);cursor:pointer;font-family:'Share Tech Mono',monospace;font-size:10px;padding:10px 14px;transition:all .12s}
+.mbtn-danger:hover{background:rgba(255,45,45,.1)}
+
+/* sub list */
+.sub-cat{margin-bottom:14px}
+.sub-cat-label{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid var(--border)}
+.sub-opts{display:flex;flex-wrap:wrap;gap:4px}
+.sub-opt{background:var(--s3);border:1px solid var(--border);color:var(--text);cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:600;letter-spacing:.5px;padding:5px 12px;transition:all .12s}
+.sub-opt:hover{border-color:var(--accent);color:var(--accent)}
+
+/* ── NEXT WEEK TAB ── */
+.nw-layout{display:grid;grid-template-columns:1fr 1fr;gap:16px;height:calc(100vh - 140px);min-height:400px}
+@media(max-width:700px){.nw-layout{grid-template-columns:1fr;height:auto}}
+.nw-chat-col{display:flex;flex-direction:column;gap:8px}
+.nw-program-col{display:flex;flex-direction:column;gap:8px;overflow-y:auto}
+.nw-chat-messages{flex:1;background:var(--s1);border:1px solid var(--border);overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;min-height:300px}
+.nw-msg{display:flex;flex-direction:column;gap:3px}
+.nw-msg.user{align-items:flex-end}
+.nw-msg.ai{align-items:flex-start}
+.nw-bubble{padding:10px 14px;font-size:13px;line-height:1.6;max-width:90%}
+.nw-bubble.user{background:var(--accent);color:#000;font-weight:500}
+.nw-bubble.ai{background:var(--s3);border:1px solid var(--border2);color:var(--text)}
+.nw-role{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase}
+.nw-input-row{display:flex;gap:0}
+.nw-textarea{flex:1;background:var(--s2);border:1px solid var(--border);border-right:none;color:var(--text);font-family:'Barlow',sans-serif;font-size:13px;padding:10px 14px;resize:none;outline:none;height:54px}
+.nw-textarea:focus{border-color:var(--accent)}
+.nw-send{background:var(--accent);border:none;color:#fff;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;letter-spacing:2px;padding:0 20px;transition:opacity .12s}
+.nw-send:hover{opacity:.88}
+.nw-send:disabled{opacity:.35;cursor:not-allowed}
+
+/* program preview */
+.nw-program-card{background:var(--s1);border:1px solid var(--border);padding:16px}
+.nw-prog-title{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:900;color:var(--text);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
+.nw-prog-day{margin-bottom:12px}
+.nw-prog-day-name{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;color:var(--text);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid var(--border)}
+.nw-prog-ex{display:flex;justify-content:space-between;align-items:center;padding:4px 0;font-family:'Share Tech Mono',monospace;font-size:11px}
+.nw-prog-ex-name{color:var(--text)}
+.nw-prog-ex-detail{color:var(--muted)}
+.nw-commit-btn{background:var(--green);border:none;color:#0a0a0a;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;letter-spacing:2px;padding:10px 20px;transition:opacity .12s;flex-shrink:0}
+.nw-commit-btn:hover{opacity:.88}
+.nw-prog-loading{display:flex;align-items:center;gap:10px;padding:20px;font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--muted)}
+
+/* spinner */
+.spin{width:14px;height:14px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:sp .7s linear infinite;display:inline-block;vertical-align:middle}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+/* ── PLATES TAB ── */
+.plates-main{max-width:500px}
+.pc-input-row{display:flex;gap:8px;align-items:center;margin-bottom:20px;flex-wrap:wrap}
+.pc-kg-input{background:var(--s2);border:1px solid var(--border);color:var(--text);font-family:'Barlow Condensed',sans-serif;font-size:32px;font-weight:700;padding:8px 16px;width:140px;outline:none;text-align:center;transition:border-color .12s}
+.pc-kg-input:focus{border-color:var(--accent)}
+.pc-unit{font-family:'Barlow Condensed',sans-serif;font-size:22px;color:var(--muted);font-weight:600}
+.pc-bar-display{background:var(--s1);border:1px solid var(--border);padding:20px;margin-bottom:16px}
+.pc-bar-row{display:flex;align-items:center;gap:3px;flex-wrap:nowrap;overflow-x:auto;padding:8px 0}
+.pc-plate-block{display:flex;flex-direction:column;align-items:center;gap:3px;flex-shrink:0}
+.pc-plate-rect{border-radius:2px;display:flex;align-items:center;justify-content:center;font-family:'Share Tech Mono',monospace;font-weight:600;color:#000;font-size:8px;writing-mode:vertical-rl;text-orientation:mixed}
+.pc-bar-pipe{width:80px;height:14px;background:linear-gradient(90deg,#2a2a2a,#444,#2a2a2a);border-radius:2px;flex-shrink:0;position:relative}
+.pc-bar-pipe::after{content:'';position:absolute;inset:4px 0;background:rgba(255,255,255,.08);border-radius:1px}
+.pc-collar{width:8px;height:22px;background:#3a3a3a;border-radius:1px;flex-shrink:0}
+.pc-total{font-family:'Barlow Condensed',sans-serif;font-size:42px;font-weight:900;color:var(--text);margin-top:8px}
+.pc-total-label{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:2px}
+.pc-per-side{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--muted);margin-top:4px}
+.pc-jumps{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.pc-jump-btn{background:var(--s2);border:1px solid var(--border);cursor:pointer;font-family:'Share Tech Mono',monospace;font-size:10px;padding:5px 12px;transition:all .12s}
+.pc-jump-btn.plus{color:var(--accent-bright);border-color:var(--accent-border)}
+.pc-jump-btn.minus{color:var(--red);border-color:var(--red)}
+.pc-jump-btn:hover{opacity:.75}
+
+/* ── PROGRESS TAB ── */
+.chart-card{background:var(--s1);border:1px solid var(--border);padding:20px;margin-bottom:12px}
+.chart-title{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;color:var(--text);letter-spacing:2px;text-transform:uppercase;margin-bottom:14px}
+.chart-legend{display:flex;gap:14px;margin-top:10px;flex-wrap:wrap}
+.cl-item{display:flex;align-items:center;gap:6px;font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
+.cl-dot{width:7px;height:7px;border-radius:50%}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:3px;height:3px}
+::-webkit-scrollbar-track{background:var(--s1)}
+::-webkit-scrollbar-thumb{background:var(--border2)}
+
+/* ── MOBILE ── */
+@media(max-width:680px){
+  .topbar{height:auto;flex-wrap:wrap;padding:0}
+  .topbar-brand{padding:10px 14px;border-right:none;border-bottom:1px solid var(--border);width:100%}
+  .topbar-nav{padding:0 6px}
+  .topbar-right{display:none}
+  .main{padding:10px 12px}
+  .ex-thead,.ex-row{grid-template-columns:140px 60px 1fr 1fr 1fr 1fr 60px 60px 24px}
+}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const {useState,useEffect,useRef,useCallback} = React;
+
+const PW = "1414";
+const SCRIPT = "https://script.google.com/macros/s/AKfycby6y22WT8IwMmBtIlYZvwYjv9aST-jZYRjIhoBmRzsoFJZ_t80g54YEP6nEQBTp36j_/exec";
+
+// COMP MAXES in KG
+const MAXES = { squat: 232.7, bench: 142.4, deadlift: 265 }; // 513/314/584 lbs converted
+
+// KG PLATE COLORS & SIZES (IPF standard)
+const KG_PLATES = [
+  {kg:25,  color:'#e62020', h:58},
+  {kg:20,  color:'#1a6ec7', h:52},
+  {kg:15,  color:'#f5c400', h:46},
+  {kg:10,  color:'#2ea832', h:38},
+  {kg:5,   color:'#f0f0f0', h:30},
+  {kg:2.5, color:'#f0f0f0', h:24},
+  {kg:1.25,color:'#888',    h:18},
+];
+const BAR_KG = 20;
+
+function calcKgPlates(totalKg) {
+  let remaining = (totalKg - BAR_KG) / 2;
+  if (remaining < 0) return null;
+  const result = [];
+  for (const p of KG_PLATES) {
+    const n = Math.floor(remaining / p.kg + 0.001);
+    if (n > 0) { result.push({...p, count: n}); remaining -= p.kg * n; }
+  }
+  return result;
+}
+
+// ── BAR VISUALIZATION ──────────────────────────────────────────────────────
+function BarViz({kg}) {
+  const kgNum = parseFloat(kg);
+  if (!kgNum || kgNum < BAR_KG) return null;
+  const plates = calcKgPlates(kgNum);
+  if (!plates) return null;
+
+  return (
+    <div className="bar-viz">
+      <div className="bar-viz-inner">
+        {/* left collar */}
+        <div className="bv-collar" />
+        {/* plates reversed on left side (visual) */}
+        {[...plates].reverse().map((p,i) =>
+          Array.from({length: p.count}).map((_,j) => (
+            <div key={`L${i}_${j}`} className="bv-plate"
+              style={{background:p.color, height:`${p.h}px`, width:'8px', marginRight:'1px'}} />
+          ))
+        )}
+        {/* bar */}
+        <div style={{width:'36px',height:'10px',background:'linear-gradient(90deg,#2a2a2a,#555,#2a2a2a)',borderRadius:'2px',flexShrink:0}} />
+        {/* plates right side */}
+        {plates.map((p,i) =>
+          Array.from({length: p.count}).map((_,j) => (
+            <div key={`R${i}_${j}`} className="bv-plate"
+              style={{background:p.color, height:`${p.h}px`, width:'8px', marginLeft:'1px'}} />
+          ))
+        )}
+        <div className="bv-collar" />
+        <div className="bv-total">{kgNum}kg</div>
+      </div>
+      <div className="bv-plates-text">
+        {plates.map(p => `${p.count}×${p.kg}kg`).join('  ')}
+      </div>
+    </div>
+  );
+}
+
+// ── STANDALONE PLATE CALC ──────────────────────────────────────────────────
+function PlateCalcTab() {
+  const [kg, setKg] = useState('');
+  const kgNum = parseFloat(kg) || 0;
+  const plates = kgNum >= BAR_KG ? calcKgPlates(kgNum) : null;
+
+  return (
+    <div className="plates-main">
+      <div className="sec-head">Plate Calculator</div>
+      <div className="pc-input-row">
+        <input className="pc-kg-input" type="number" step="0.5" placeholder="0"
+          value={kg} onChange={e => setKg(e.target.value)} autoFocus />
+        <div className="pc-unit">KG</div>
+      </div>
+
+      {plates && (
+        <div className="pc-bar-display">
+          <div style={{marginBottom:6}}>
+            <div className="pc-total">{kgNum}kg</div>
+            <div className="pc-per-side">
+              per side: {plates.map(p=>`${p.count}×${p.kg}kg`).join(' + ')}
+            </div>
+          </div>
+          <div className="pc-bar-row">
+            {/* Left side reversed */}
+            {[...plates].reverse().map((p,i) =>
+              Array.from({length:p.count}).map((_,j)=>(
+                <div key={`l${i}${j}`} className="pc-plate-block">
+                  <div className="pc-plate-rect"
+                    style={{background:p.color, height:`${p.h}px`, width:'16px', minHeight:`${p.h}px'}}>
+                    {p.kg}
+                  </div>
+                </div>
+              ))
+            )}
+            <div className="pc-collar" />
+            <div className="pc-bar-pipe" style={{flex:1}} />
+            <div className="pc-collar" />
+            {/* Right side */}
+            {plates.map((p,i) =>
+              Array.from({length:p.count}).map((_,j)=>(
+                <div key={`r${i}${j}`} className="pc-plate-block">
+                  <div className="pc-plate-rect"
+                    style={{background:p.color, height:`${p.h}px`, width:'16px', minHeight:`${p.h}px`}}>
+                    {p.kg}
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+      )}
+
+      {!plates && kgNum > 0 && kgNum < BAR_KG && (
+        <div style={{fontFamily:'Share Tech Mono,monospace',fontSize:12,color:'var(--muted)'}}>min {BAR_KG}kg (bar only)</div>
+      )}
+
+      <div className="pc-jumps">
+        {[-5,-2.5,2.5,5,10].map(inc => (
+          <button key={inc} className={`pc-jump-btn ${inc>0?'plus':'minus'}`}
+            onClick={() => setKg(String(Math.max(0, (kgNum||0) + inc)))}>
+            {inc>0?'+':''}{inc}kg
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ── RPE HELPERS ────────────────────────────────────────────────────────────
+function rpeClass(actual, target) {
+  if (!actual || !target) return '';
+  const a = parseFloat(actual);
+  const t = parseFloat(String(target).replace(/[^0-9.]/g,'').split('-').pop());
+  if (isNaN(a)||isNaN(t)) return '';
+  const d = a - t;
+  return d <= 0 ? 'g' : d <= 1 ? 'y' : 'r';
+}
+function getSignal(actual, target) {
+  if (!actual || !target) return null;
+  const a = parseFloat(actual);
+  const t = parseFloat(String(target).replace(/[^0-9.]/g,'').split('-').pop());
+  if (isNaN(a)||isNaN(t)) return null;
+  const d = a - t;
+  return d <= 0 ? 'up' : d <= 1 ? 'hold' : 'down';
+}
+function Signal({actual, target}) {
+  const sig = getSignal(actual, target);
+  if (!sig) return <span className="sig none">—</span>;
+  return <span className={`sig ${sig}`}>{sig==='up'?'+2.5kg': sig==='hold'?'HOLD':'-2.5kg'}</span>;
+}
+
+// ── DEFAULT PROGRAM DATA ───────────────────────────────────────────────────
+// Weights already in KG (converted from spreadsheet)
+function defaultProgram() {
+  const tm = { s: Math.round(MAXES.squat*0.92*2)/2, b: Math.round(MAXES.bench*0.94*2)/2, d: Math.round(MAXES.deadlift*0.93*2)/2 };
+  return {
+    1:{label:"Week 1",phase:"Hypertrophy",days:[
+      {id:"mon",name:"Monday",desc:"Upper Hypertrophy",isRest:false,exercises:[
+        {name:"DB Incline Bench",targetRPE:null,sets:[{reps:"x10"},{reps:"x10"},{reps:"x10"},{reps:"x10"}],isCompound:false},
+        {name:"Lat Pulldowns Wide",targetRPE:null,sets:[{reps:"x12"},{reps:"x12"},{reps:"x12"},{reps:"x12"}],isCompound:false},
+        {name:"Military Press",targetRPE:null,sets:[{reps:"x10"},{reps:"x10"},{reps:"x10"}],isCompound:false},
+        {name:"Tricep Pushdowns",targetRPE:null,sets:[{reps:"x15"},{reps:"x15"},{reps:"x15"},{reps:"x15"}],isCompound:false},
+      ]},
+      {id:"tue",name:"Tuesday",desc:"SBD Focus A",isRest:false,exercises:[
+        {name:"Squat",targetRPE:"7-7.5",sets:[{kg:Math.round(tm.s*0.70*2)/2,reps:"x6"},{kg:Math.round(tm.s*0.70*2)/2,reps:"x6"},{kg:Math.round(tm.s*0.70*2)/2,reps:"x6"}],isCompound:true},
+        {name:"Bench Press",targetRPE:"7-7.5",sets:[{kg:Math.round(tm.b*0.70*2)/2,reps:"x6"},{kg:Math.round(tm.b*0.70*2)/2,reps:"x6"},{kg:Math.round(tm.b*0.70*2)/2,reps:"x6"},{kg:Math.round(tm.b*0.70*2)/2,reps:"x6"}],isCompound:true},
+        {name:"Leg Extensions",targetRPE:null,sets:[{reps:"x15"},{reps:"x15"},{reps:"x15"},{reps:"x15"}],isCompound:false},
+      ]},
+      {id:"wed",name:"Wednesday",desc:"Lower Accessories",isRest:false,exercises:[
+        {name:"Leg Press",targetRPE:null,sets:[{reps:"x12"},{reps:"x12"},{reps:"x12"},{reps:"x12"}],isCompound:false},
+        {name:"RDL Dumbbell",targetRPE:null,sets:[{reps:"x10"},{reps:"x10"},{reps:"x10"},{reps:"x10"}],isCompound:false},
+        {name:"Leg Curls Seated",targetRPE:null,sets:[{reps:"x15"},{reps:"x15"},{reps:"x15"},{reps:"x15"}],isCompound:false},
+        {name:"Hammer Curls",targetRPE:null,sets:[{reps:"x12"},{reps:"x12"},{reps:"x12"}],isCompound:false},
+      ]},
+      {id:"thu",name:"Thursday",desc:"Rest",isRest:true,exercises:[]},
+      {id:"fri",name:"Friday",desc:"SBD Focus B",isRest:false,exercises:[
+        {name:"Deadlift",targetRPE:"8.5",sets:[{kg:236,reps:"x2"},{kg:236,reps:"x2"},{kg:236,reps:"x2"}],isCompound:true},
+        {name:"Bench Press",targetRPE:"8.0",sets:[{kg:Math.round(tm.b*0.85*2)/2,reps:"x5"},{kg:Math.round(tm.b*0.85*2)/2,reps:"x5"},{kg:Math.round(tm.b*0.85*2)/2,reps:"x5"}],isCompound:true},
+        {name:"Facepulls",targetRPE:null,sets:[{reps:"x20"},{reps:"x20"},{reps:"x20"},{reps:"x20"}],isCompound:false},
+      ]},
+      {id:"sat",name:"Saturday",desc:"SBD Session",isRest:false,exercises:[
+        {name:"Pause Squat",targetRPE:"6.5",sets:[{kg:Math.round(tm.s*0.67*2)/2,reps:"x8"},{kg:Math.round(tm.s*0.67*2)/2,reps:"x8"},{kg:Math.round(tm.s*0.67*2)/2,reps:"x8"}],isCompound:true},
+        {name:"Bench Press",targetRPE:"8.5",sets:[{kg:Math.round(tm.b*0.90*2)/2,reps:"x3"},{kg:Math.round(tm.b*0.90*2)/2,reps:"x3"},{kg:Math.round(tm.b*0.90*2)/2,reps:"x3"}],isCompound:true},
+        {name:"Speed Deadlift",targetRPE:"6.0",sets:[{kg:Math.round(tm.d*0.65*2)/2,reps:"x6"},{kg:Math.round(tm.d*0.65*2)/2,reps:"x6"}],isCompound:true},
+        {name:"Hanging Leg Raises",targetRPE:null,sets:[{reps:"x15"},{reps:"x15"},{reps:"x15"}],isCompound:false},
+      ]},
+      {id:"sun",name:"Sunday",desc:"Low-Fatigue Upper",isRest:false,exercises:[
+        {name:"DB Incline Bench",targetRPE:null,sets:[{reps:"x12-15"},{reps:"x12-15"},{reps:"x12-15"}],isCompound:false},
+        {name:"Chest-Supported Row",targetRPE:null,sets:[{reps:"x15"},{reps:"x15"},{reps:"x15"}],isCompound:false},
+        {name:"Cable Lateral Raises",targetRPE:null,sets:[{reps:"x15-20"},{reps:"x15-20"},{reps:"x15-20"}],isCompound:false},
+        {name:"Lat Pulldown Wide",targetRPE:null,sets:[{reps:"x15"},{reps:"x15"},{reps:"x15"}],isCompound:false},
+      ]},
+    ]},
+    2:{label:"Week 2",phase:"Hypertrophy",days:[
+      {id:"mon",name:"Monday",desc:"Upper Hypertrophy",isRest:false,exercises:[
+        {name:"Incline Press",targetRPE:"7.0",sets:[{reps:"x10"},{reps:"x10"},{reps:"x10"}],isCompound:false},
+        {name:"Lat Pulldowns Wide",targetRPE:"8.0",sets:[{reps:"x12"},{reps:"x12"},{reps:"x12"},{reps:"x12"}],isCompound:false},
+        {name:"Military Press",targetRPE:"7.0",sets:[{reps:"x10"},{reps:"x10"},{reps:"x10"}],isCompound:false},
+        {name:"Lateral Raise",targetRPE:null,sets:[{reps:"x15-20"},{reps:"x15-20"},{reps:"x15-20"},{reps:"x15-20"}],isCompound:false},
+        {name:"Tricep/Bicep Superset",targetRPE:null,sets:[{reps:"x15"},{reps:"x15"},{reps:"x15"},{reps:"x15"}],isCompound:false},
+      ]},
+      {id:"tue",name:"Tuesday",desc:"SBD Focus A",isRest:false,exercises:[
+        {name:"Squat",targetRPE:"7-7.5",sets:[{kg:152,reps:"x6"},{kg:160,reps:"x6"},{kg:160,reps:"x6"}],isCompound:true},
+        {name:"Bench Press",targetRPE:"7-7.5",sets:[{kg:95,reps:"x6"},{kg:95,reps:"x6"},{kg:95,reps:"x6"},{kg:95,reps:"x6"}],isCompound:true},
+        {name:"Leg Extensions",targetRPE:null,sets:[{reps:"x15"},{reps:"x15"},{reps:"x15"},{reps:"x15"}],isCompound:false},
+      ]},
+      {id:"wed",name:"Wednesday",desc:"Lower Accessories",isRest:false,exercises:[
+        {name:"Leg Press",targetRPE:null,sets:[{reps:"x12"},{reps:"x12"},{reps:"x12"},{reps:"x12"}],isCompound:false},
+        {name:"RDL Dumbbell",targetRPE:null,sets:[{reps:"x10"},{reps:"x10"},{reps:"x10"},{reps:"x10"}],isCompound:false},
+        {name:"Leg Curls Seated",targetRPE:null,sets:[{reps:"x15"},{reps:"x15"},{reps:"x15"},{reps:"x15"}],isCompound:false},
+        {name:"Hammer Curls",targetRPE:null,sets:[{reps:"x12"},{reps:"x12"},{reps:"x12"}],isCompound:false},
+      ]},
+      {id:"thu",name:"Thursday",desc:"Rest",isRest:true,exercises:[]},
+      {id:"fri",name:"Friday",desc:"SBD Focus B",isRest:false,exercises:[
+        {name:"Deadlift",targetRPE:"8.0",sets:[{kg:229,reps:"x2"},{kg:229,reps:"x2"},{kg:229,reps:"x2"}],isCompound:true},
+        {name:"Bench Press",targetRPE:"8-8.5",sets:[{kg:111,reps:"x5"},{kg:111,reps:"x5"},{kg:111,reps:"x5"}],isCompound:true},
+        {name:"Facepulls",targetRPE:null,sets:[{reps:"x20"},{reps:"x20"},{reps:"x20"},{reps:"x20"}],isCompound:false},
+      ]},
+      {id:"sat",name:"Saturday",desc:"SBD Session",isRest:false,exercises:[
+        {name:"Pause Squat",targetRPE:"7.0",sets:[{kg:Math.round(tm.s*0.70*2)/2,reps:"x8"},{kg:Math.round(tm.s*0.70*2)/2,reps:"x8"},{kg:Math.round(tm.s*0.70*2)/2,reps:"x8"}],isCompound:true},
+        {name:"Bench Press",targetRPE:"8.5",sets:[{kg:116,reps:"x3"},{kg:116,reps:"x3"},{kg:116,reps:"x3"}],isCompound:true},
+        {name:"Speed Deadlift",targetRPE:"6.0",sets:[{kg:179,reps:"x5"},{kg:179,reps:"x5"},{kg:179,reps:"x5"}],isCompound:true},
+        {name:"Hanging Leg Raises",targetRPE:null,sets:[{reps:"x15"},{reps:"x15"},{reps:"x15"}],isCompound:false},
+      ]},
+      {id:"sun",name:"Sunday",desc:"Low-Fatigue Upper",isRest:false,exercises:[
+        {name:"DB Incline Bench",targetRPE:null,sets:[{reps:"x12-15"},{reps:"x12-15"},{reps:"x12-15"}],isCompound:false},
+        {name:"Chest-Supported Row",targetRPE:null,sets:[{reps:"x15"},{reps:"x15"},{reps:"x15"}],isCompound:false},
+        {name:"Cable Lateral Raises",targetRPE:null,sets:[{reps:"x15-20"},{reps:"x15-20"},{reps:"x15-20"}],isCompound:false},
+        {name:"Lat Pulldown Wide",targetRPE:null,sets:[{reps:"x15"},{reps:"x15"},{reps:"x15"}],isCompound:false},
+      ]},
+    ]},
+    3:{label:"Week 3",phase:"Intensification",days:[
+      {id:"mon",name:"Monday",desc:"Bench + Upper",isRest:false,exercises:[
+        {name:"Bench Press",targetRPE:"7.5-8",sets:[{kg:116,reps:"x5"},{kg:104,reps:"x5"},{kg:104,reps:"x5"},{kg:104,reps:"x5"}],isCompound:true},
+        {name:"Overhead Press",targetRPE:"7-8",sets:[{reps:"x6-8"},{reps:"x6-8"},{reps:"x6-8"},{reps:"x8-10"}],isCompound:false},
+        {name:"Chest Supported Row",targetRPE:"8.0",sets:[{reps:"x8-10"},{reps:"x8-10"},{reps:"x8-10"},{reps:"x8-10"}],isCompound:false},
+        {name:"Dips",targetRPE:"7-8",sets:[{reps:"x8-10"},{reps:"x8-10"},{reps:"x8-10"}],isCompound:false},
+        {name:"Lateral Raise",targetRPE:"8.0",sets:[{reps:"x15-20"},{reps:"x15-20"},{reps:"x15-20"}],isCompound:false},
+        {name:"Tricep/Bicep",targetRPE:null,sets:[{reps:"x15"},{reps:"x15"},{reps:"x15"},{reps:"x15"}],isCompound:false},
+      ]},
+      {id:"tue",name:"Tuesday",desc:"SBD Focus A",isRest:false,exercises:[
+        {name:"Squat",targetRPE:"7.5-8",sets:[{kg:163,reps:"x6"},{kg:163,reps:"x6"},{kg:163,reps:"x6"}],isCompound:true},
+        {name:"Bench Press",targetRPE:"7.5-8",sets:[{kg:100,reps:"x6"},{kg:100,reps:"x6"},{kg:100,reps:"x6"},{kg:100,reps:"x6"}],isCompound:true},
+        {name:"Leg Extensions",targetRPE:null,sets:[{reps:"x15"},{reps:"x15"},{reps:"x15"},{reps:"x15"}],isCompound:false},
+      ]},
+      {id:"wed",name:"Wednesday",desc:"Lower Accessories",isRest:false,exercises:[
+        {name:"Bulgarian Split Squats",targetRPE:"7-8",sets:[{reps:"x8-10"},{reps:"x8-10"},{reps:"x8-10"},{reps:"x8-10"}],isCompound:false},
+        {name:"Hack Squat/Belt Squat",targetRPE:"8.0",sets:[{reps:"x10"},{reps:"x10"},{reps:"x10"}],isCompound:false},
+        {name:"Leg Curls Seated",targetRPE:null,sets:[{reps:"x10-15"},{reps:"x10-15"},{reps:"x10-15"},{reps:"x10-15"}],isCompound:false},
+        {name:"Back Extensions/Calves",targetRPE:null,sets:[{reps:"x10-15"},{reps:"x10-15"},{reps:"x10-15"},{reps:"x10-15"}],isCompound:false},
+      ]},
+      {id:"thu",name:"Thursday",desc:"Rest",isRest:true,exercises:[]},
+      {id:"fri",name:"Friday",desc:"SBD Focus B",isRest:false,exercises:[
+        {name:"Deadlift",targetRPE:"8.0",sets:[{kg:224,reps:"x2"},{kg:224,reps:"x2"},{kg:224,reps:"x2"},{kg:224,reps:"x2"}],isCompound:true},
+        {name:"Bench Press",targetRPE:"8-8.5",sets:[{kg:116,reps:"x5"},{kg:116,reps:"x5"},{kg:116,reps:"x5"}],isCompound:true},
+        {name:"Facepulls",targetRPE:null,sets:[{reps:"x20"},{reps:"x20"},{reps:"x20"},{reps:"x20"}],isCompound:false},
+      ]},
+      {id:"sat",name:"Saturday",desc:"SBD Session",isRest:false,exercises:[
+        {name:"Pause Squat",targetRPE:"7.5-8",sets:[{kg:154,reps:"x8"},{kg:154,reps:"x8"},{kg:154,reps:"x8"}],isCompound:true},
+        {name:"Bench Press",targetRPE:"8-8.5",sets:[{kg:120,reps:"x3"},{kg:120,reps:"x3"},{kg:120,reps:"x3"}],isCompound:true},
+        {name:"Speed Deadlift",targetRPE:"6-6.5",sets:[{kg:184,reps:"x5"},{kg:184,reps:"x5"},{kg:184,reps:"x5"}],isCompound:true},
+        {name:"Hanging Leg Raises",targetRPE:null,sets:[{reps:"x15"},{reps:"x15"},{reps:"x15"}],isCompound:false},
+      ]},
+      {id:"sun",name:"Sunday",desc:"Low-Fatigue Upper",isRest:false,exercises:[
+        {name:"DB Incline Bench",targetRPE:null,sets:[{reps:"x12-15"},{reps:"x12-15"},{reps:"x12-15"}],isCompound:false},
+        {name:"Chest-Supported Row",targetRPE:null,sets:[{reps:"x15"},{reps:"x15"},{reps:"x15"}],isCompound:false},
+        {name:"Cable Lateral Raises",targetRPE:null,sets:[{reps:"x15-20"},{reps:"x15-20"},{reps:"x15-20"}],isCompound:false},
+        {name:"Lat Pulldown Wide",targetRPE:null,sets:[{reps:"x15"},{reps:"x15"},{reps:"x15"}],isCompound:false},
+      ]},
+    ]},
+    4:{label:"Week 4",phase:"Strength",days:[
+      {id:"mon",name:"Monday",desc:"Bench + Upper",isRest:false,exercises:[
+        {name:"Bench Press",targetRPE:"7.5-8",sets:[{kg:118,reps:"x5"},{kg:108,reps:"x5"},{kg:108,reps:"x5"},{kg:108,reps:"x5"}],isCompound:true},
+        {name:"Pec Deck",targetRPE:"7-8",sets:[{reps:"x12-15"},{reps:"x12-15"},{reps:"x12-15"},{reps:"x12-15"}],isCompound:false},
+        {name:"Chest Supported Row",targetRPE:"8.0",sets:[{reps:"x8-10"},{reps:"x8-10"},{reps:"x8-10"},{reps:"x8-10"}],isCompound:false},
+        {name:"Machine Shoulder Press",targetRPE:"7-8",sets:[{reps:"x10-12"},{reps:"x10-12"},{reps:"x10-12"}],isCompound:false},
+        {name:"Cable Tricep Overhead",targetRPE:"8.0",sets:[{reps:"x12-15"},{reps:"x12-15"},{reps:"x12-15"},{reps:"x12"}],isCompound:false},
+        {name:"Hammer Curl",targetRPE:null,sets:[{reps:"x12"},{reps:"x12"},{reps:"x12"},{reps:"x12"}],isCompound:false},
+      ]},
+      {id:"tue",name:"Tuesday",desc:"SBD Focus A",isRest:false,exercises:[
+        {name:"Squat",targetRPE:"8.0",sets:[{kg:175,reps:"x4"},{kg:175,reps:"x4"},{kg:175,reps:"x4"}],isCompound:true},
+        {name:"Bench Press",targetRPE:"8.0",sets:[{kg:111,reps:"x4"},{kg:111,reps:"x4"},{kg:111,reps:"x4"},{kg:111,reps:"x4"}],isCompound:true},
+        {name:"Leg Extensions",targetRPE:null,sets:[{reps:"x15"},{reps:"x15"},{reps:"x15"}],isCompound:false},
+      ]},
+      {id:"wed",name:"Wednesday",desc:"Lower Accessories",isRest:false,exercises:[
+        {name:"Bulgarian Split Squats",targetRPE:"7-8",sets:[{reps:"x8-10"},{reps:"x8-10"},{reps:"x8-10"},{reps:"x8-10"}],isCompound:false},
+        {name:"Hack Squat/Belt Squat",targetRPE:"8.0",sets:[{reps:"x10"},{reps:"x10"},{reps:"x10"}],isCompound:false},
+        {name:"Leg Curls Seated",targetRPE:null,sets:[{reps:"x10-15"},{reps:"x10-15"},{reps:"x10-15"},{reps:"x10-15"}],isCompound:false},
+        {name:"Back Extensions/Calves",targetRPE:null,sets:[{reps:"x10-15"},{reps:"x10-15"},{reps:"x10-15"},{reps:"x10-15"}],isCompound:false},
+      ]},
+      {id:"thu",name:"Thursday",desc:"Rest",isRest:true,exercises:[]},
+      {id:"fri",name:"Friday",desc:"Full SBD",isRest:false,exercises:[
+        {name:"Squat",targetRPE:"8.0",sets:[{kg:175,reps:"x4"},{kg:175,reps:"x4"},{kg:175,reps:"x4"}],isCompound:true},
+        {name:"Bench Press",targetRPE:"8.0",sets:[{kg:110,reps:"x4"},{kg:110,reps:"x4"},{kg:110,reps:"x4"},{kg:110,reps:"x4"}],isCompound:true},
+        {name:"Deadlift",targetRPE:"8-8.5",sets:[{kg:230,reps:"x2-3"},{kg:230,reps:"x2-3"},{kg:230,reps:"x2-3"}],isCompound:true},
+        {name:"Band Pull-Aparts",targetRPE:null,sets:[{reps:"x20"},{reps:"x20"},{reps:"x20"},{reps:"x20"}],isCompound:false},
+      ]},
+      {id:"sat",name:"Saturday",desc:"Upper Hypertrophy",isRest:false,exercises:[
+        {name:"DB Incline Press",targetRPE:"7-8",sets:[{reps:"x10-12"},{reps:"x10-12"},{reps:"x10-12"},{reps:"x10-12"}],isCompound:false},
+        {name:"Lat Pulldown Wide",targetRPE:"8.0",sets:[{reps:"x10-12"},{reps:"x10-12"},{reps:"x10-12"},{reps:"x10-12"}],isCompound:false},
+        {name:"Machine Shoulder Press",targetRPE:"7-8",sets:[{reps:"x10-12"},{reps:"x10-12"},{reps:"x10-12"}],isCompound:false},
+        {name:"Tricep Pushdowns",targetRPE:null,sets:[{reps:"x15"},{reps:"x15"},{reps:"x15"}],isCompound:false},
+        {name:"Hammer Curls",targetRPE:null,sets:[{reps:"x12"},{reps:"x12"},{reps:"x12"}],isCompound:false},
+      ]},
+      {id:"sun",name:"Sunday",desc:"Low-Fatigue Lower",isRest:false,exercises:[
+        {name:"Leg Press",targetRPE:null,sets:[{reps:"x15"},{reps:"x15"},{reps:"x15"}],isCompound:false},
+        {name:"Leg Curls Seated",targetRPE:null,sets:[{reps:"x15"},{reps:"x15"},{reps:"x15"}],isCompound:false},
+        {name:"Leg Extensions",targetRPE:null,sets:[{reps:"x15"},{reps:"x15"},{reps:"x15"}],isCompound:false},
+        {name:"Hanging Leg Raises",targetRPE:null,sets:[{reps:"x15"},{reps:"x15"},{reps:"x15"}],isCompound:false},
+      ]},
+    ]},
+    5:{label:"Week 5",phase:"Strength",days:[
+      {id:"mon",name:"Monday",desc:"Bench + Upper",isRest:false,exercises:[
+        {name:"Bench Press",targetRPE:"7.5-8",sets:[{kg:118,reps:"x5"},{kg:109,reps:"x5"},{kg:109,reps:"x5"},{kg:109,reps:"x5"}],isCompound:true},
+        {name:"Pec Deck",targetRPE:"7-8",sets:[{reps:"x12-15"},{reps:"x12-15"},{reps:"x12-15"},{reps:"x12-15"}],isCompound:false},
+        {name:"Chest Supported Row",targetRPE:"8.0",sets:[{reps:"x8-10"},{reps:"x8-10"},{reps:"x8-10"},{reps:"x8-10"}],isCompound:false},
+        {name:"Machine Shoulder Press",targetRPE:"7-8",sets:[{reps:"x10-12"},{reps:"x10-12"},{reps:"x10-12"}],isCompound:false},
+        {name:"Cable Tricep Overhead",targetRPE:"8.0",sets:[{reps:"x12-15"},{reps:"x12-15"},{reps:"x12-15"},{reps:"x12"}],isCompound:false},
+        {name:"Hammer Curl",targetRPE:null,sets:[{reps:"x12"},{reps:"x12"},{reps:"x12"},{reps:"x12"}],isCompound:false},
+      ]},
+      {id:"tue",name:"Tuesday",desc:"Squat + Deadlift",isRest:false,exercises:[
+        {name:"Squat",targetRPE:"8.0",sets:[{kg:181,reps:"x4"},{kg:172,reps:"x4"},{kg:172,reps:"x4"},{kg:172,reps:"x4"}],isCompound:true},
+        {name:"Pause Sumo Deadlift",targetRPE:"7-7.5",sets:[{kg:200,reps:"x4"},{kg:200,reps:"x3"},{kg:200,reps:"x3"}],isCompound:true},
+        {name:"Leg Extensions",targetRPE:null,sets:[{reps:"x15"},{reps:"x15"},{reps:"x15"}],isCompound:false},
+      ]},
+      {id:"wed",name:"Wednesday",desc:"Lower Accessories",isRest:false,exercises:[
+        {name:"Smith Machine Split Squats",targetRPE:"7-8",sets:[{reps:"x8-10"},{reps:"x8-10"},{reps:"x8-10"},{reps:"x8-10"}],isCompound:false},
+        {name:"Belt Squat",targetRPE:"8.0",sets:[{reps:"x10"},{reps:"x10"},{reps:"x10"}],isCompound:false},
+        {name:"Leg Curls Seated",targetRPE:null,sets:[{reps:"x10-15"},{reps:"x10-15"},{reps:"x10-15"},{reps:"x10-15"}],isCompound:false},
+        {name:"Back Extensions/Calves",targetRPE:null,sets:[{reps:"x10-15"},{reps:"x10-15"},{reps:"x10-15"},{reps:"x10-15"}],isCompound:false},
+      ]},
+      {id:"thu",name:"Thursday",desc:"Rest",isRest:true,exercises:[]},
+      {id:"fri",name:"Friday",desc:"Full SBD",isRest:false,exercises:[
+        {name:"Squat",targetRPE:"8-8.5",sets:[{kg:184,reps:"x3"},{kg:175,reps:"x3"},{kg:175,reps:"x3"},{kg:175,reps:"x3"}],isCompound:true},
+        {name:"Bench Press",targetRPE:"8.0",sets:[{kg:116,reps:"x4"},{kg:116,reps:"x4"},{kg:116,reps:"x4"},{kg:116,reps:"x4"}],isCompound:true},
+        {name:"Deadlift",targetRPE:"8-8.5",sets:[{kg:236,reps:"x2"},{kg:224,reps:"x2"},{kg:224,reps:"x2"}],isCompound:true},
+        {name:"Facepulls",targetRPE:null,sets:[{reps:"x20"},{reps:"x20"},{reps:"x20"},{reps:"x20"}],isCompound:false},
+      ]},
+      {id:"sat",name:"Saturday",desc:"Upper Hypertrophy",isRest:false,exercises:[
+        {name:"DB Incline Press",targetRPE:"7-8",sets:[{reps:"x10-12"},{reps:"x10-12"},{reps:"x10-12"},{reps:"x10-12"}],isCompound:false},
+        {name:"Lat Pulldown Wide",targetRPE:"8.0",sets:[{reps:"x10-12"},{reps:"x10-12"},{reps:"x10-12"},{reps:"x10-12"}],isCompound:false},
+        {name:"Machine Shoulder Press",targetRPE:"7-8",sets:[{reps:"x10-12"},{reps:"x10-12"},{reps:"x10-12"}],isCompound:false},
+        {name:"Tricep Pushdowns",targetRPE:null,sets:[{reps:"x15"},{reps:"x15"},{reps:"x15"}],isCompound:false},
+        {name:"Hammer Curls",targetRPE:null,sets:[{reps:"x12"},{reps:"x12"},{reps:"x12"}],isCompound:false},
+      ]},
+      {id:"sun",name:"Sunday",desc:"Low-Fatigue Lower",isRest:false,exercises:[
+        {name:"Leg Press",targetRPE:null,sets:[{reps:"x15"},{reps:"x15"},{reps:"x15"}],isCompound:false},
+        {name:"Leg Curls Seated",targetRPE:null,sets:[{reps:"x15"},{reps:"x15"},{reps:"x15"}],isCompound:false},
+        {name:"Leg Extensions",targetRPE:null,sets:[{reps:"x15"},{reps:"x15"},{reps:"x15"}],isCompound:false},
+        {name:"Hanging Leg Raises",targetRPE:null,sets:[{reps:"x15"},{reps:"x15"},{reps:"x15"}],isCompound:false},
+        {name:"Calves",targetRPE:null,sets:[{reps:"x15-20"},{reps:"x15-20"}],isCompound:false},
+      ]},
+    ]},
+    6:{label:"Week 6",phase:"High Intensity",days:[
+      {id:"mon",name:"Monday",desc:"Bench + Upper",isRest:false,exercises:[
+        {name:"Bench Press",targetRPE:"7-7.5",sets:[{kg:113,reps:"x5"},{kg:107,reps:"x5"},{kg:107,reps:"x5"},{kg:107,reps:"x5"}],isCompound:true},
+        {name:"Atlantis Converging Incline",targetRPE:null,sets:[{reps:"x10-12"},{reps:"x10-12"},{reps:"x10-12"},{reps:"x10-12"}],isCompound:false},
+        {name:"Atlantis Unilateral Pulldown",targetRPE:null,sets:[{reps:"x10-12"},{reps:"x10-12"},{reps:"x10-12"},{reps:"x10-12"}],isCompound:false},
+        {name:"Atlantis Seated Delt",targetRPE:null,sets:[{reps:"x15"},{reps:"x15"},{reps:"x15"},{reps:"x15"}],isCompound:false},
+        {name:"Atlantis Bicep-Tricep Combo",targetRPE:null,sets:[{reps:"x12"},{reps:"x12"},{reps:"x12"},{reps:"x12-15"}],isCompound:false},
+      ]},
+      {id:"tue",name:"Tuesday",desc:"Squat + Deadlift",isRest:false,exercises:[
+        {name:"Squat",targetRPE:"8",sets:[{kg:177,reps:"x4"},{kg:170,reps:"x4"},{kg:170,reps:"x4"},{kg:170,reps:"x4"}],isCompound:true},
+        {name:"Pause Deadlift",targetRPE:"7.5",sets:[{kg:200,reps:"x3"},{kg:200,reps:"x3"},{kg:200,reps:"x3"}],isCompound:true},
+        {name:"Atlantis Leg Extension",targetRPE:null,sets:[{reps:"x15"},{reps:"x15"},{reps:"x15"}],isCompound:false},
+      ]},
+      {id:"wed",name:"Wednesday",desc:"Lower Accessories",isRest:false,exercises:[
+        {name:"Hip Thrust",targetRPE:"8",sets:[{reps:"x8-10"},{reps:"x8-10"},{reps:"x8-10"},{reps:"x8-10"}],isCompound:false},
+        {name:"Leg Curl",targetRPE:"8",sets:[{reps:"x10"},{reps:"x10"},{reps:"x10"},{reps:"x12-15"}],isCompound:false},
+        {name:"Atlantis Leg Extension",targetRPE:null,sets:[{reps:"x12-15"},{reps:"x12-15"},{reps:"x12-15"},{reps:"x12-15"}],isCompound:false},
+        {name:"Atlantis GHD",targetRPE:null,sets:[{reps:"x8-10"},{reps:"x8-10"},{reps:"x8-10"},{reps:"x12-15"}],isCompound:false},
+        {name:"Core",targetRPE:null,sets:[{reps:"x10-15"},{reps:"x10-15"},{reps:"x10-15"},{reps:"x10-15"}],isCompound:false},
+      ]},
+      {id:"thu",name:"Thursday",desc:"Rest",isRest:true,exercises:[]},
+      {id:"fri",name:"Friday",desc:"Peak SBD",isRest:false,exercises:[
+        {name:"Squat",targetRPE:"8-8.5",sets:[{kg:186,reps:"x3"},{kg:177,reps:"x3"},{kg:177,reps:"x3"},{kg:177,reps:"x3"}],isCompound:true,note:"Focus: brace hard, controlled descent"},
+        {name:"Bench Press",targetRPE:"7.5-8",sets:[{kg:113,reps:"x3"},{kg:113,reps:"x3"},{kg:113,reps:"x3"},{kg:113,reps:"x3"}],isCompound:true,note:"Leg drive + tuck. Stop at 2 sets if heavy."},
+        {name:"Deadlift",targetRPE:"8-8.5",sets:[{kg:238,reps:"x2"},{kg:229,reps:"x2"},{kg:229,reps:"x2"}],isCompound:true},
+        {name:"Band Pull-Aparts",targetRPE:null,sets:[{reps:"x20"},{reps:"x20"},{reps:"x20"},{reps:"x20"}],isCompound:false},
+      ]},
+      {id:"sat",name:"Saturday",desc:"Upper Hypertrophy",isRest:false,exercises:[
+        {name:"Prime PL Incline Chest",targetRPE:"7-8",sets:[{reps:"x10-12"},{reps:"x10-12"},{reps:"x10-12"},{reps:"x10-12"}],isCompound:false},
+        {name:"Prime Extreme Row",targetRPE:"8",sets:[{reps:"x10-12"},{reps:"x10-12"},{reps:"x10-12"},{reps:"x10-12"}],isCompound:false},
+        {name:"Atlantis Shoulder Press",targetRPE:"7-8",sets:[{reps:"x10-12"},{reps:"x10-12"},{reps:"x10-12"},{reps:"x12-15"}],isCompound:false},
+        {name:"Atlantis Bicep-Tricep Combo",targetRPE:null,sets:[{reps:"x15"},{reps:"x15"},{reps:"x15"}],isCompound:false},
+        {name:"EZ Bar Curls",targetRPE:null,sets:[{reps:"x12"},{reps:"x12"},{reps:"x12"}],isCompound:false},
+      ]},
+      {id:"sun",name:"Sunday",desc:"Low-Fatigue Lower",isRest:false,exercises:[
+        {name:"Atlantis Pendulum",targetRPE:null,sets:[{reps:"x15"},{reps:"x15"},{reps:"x15"},{reps:"x12"}],isCompound:false},
+        {name:"Atlantis Leg Curl",targetRPE:null,sets:[{reps:"x15"},{reps:"x15"},{reps:"x15"},{reps:"x12-15"}],isCompound:false},
+        {name:"Atlantis Leg Extension",targetRPE:null,sets:[{reps:"x15"},{reps:"x15"},{reps:"x15"}],isCompound:false},
+        {name:"GluteBuilder Hip Thrust",targetRPE:null,sets:[{reps:"x15"},{reps:"x15"},{reps:"x15"}],isCompound:false},
+        {name:"Atlantis Hip Combo",targetRPE:null,sets:[{reps:"x15-20"},{reps:"x15-20"},{reps:"x12-15"}],isCompound:false},
+      ]},
+    ]},
+  };
+}
+
+// ── SUBSTITUTIONS ──────────────────────────────────────────────────────────
+const SUBS = {
+  "Squat Variations": ["Low Bar Squat","High Bar Squat","SSB Squat","Pause Squat","Box Squat","Belt Squat","Hack Squat"],
+  "Bench Variations": ["Competition Bench","Close Grip Bench","Spoto Press","Board Press","Floor Press","Incline Bench","DB Bench"],
+  "Deadlift Variations": ["Sumo Deadlift","Conventional Deadlift","Pause Deadlift","Deficit Deadlift","RDL","Trap Bar DL"],
+  "Row / Pull": ["Chest Supported Row","Barbell Row","Cable Row","DB Row","Machine Row","Lat Pulldown","Pull-Ups","Chin-Ups"],
+  "Press / OHP": ["OHP","DB Press","Machine Press","Arnold Press","Dips","Push Press","Landmine Press"],
+  "Leg Accessories": ["Leg Press","Bulgarian Split Squats","Hack Squat","Leg Extensions","Leg Curls","Nordic Curls","GHR","Hip Thrust"],
+  "Triceps": ["Tricep Pushdowns","Skull Crushers","JM Press","Overhead Tricep","Dips","Cable Extensions"],
+  "Biceps / Shoulders": ["Hammer Curls","Barbell Curl","Preacher Curl","Cable Curl","Lateral Raise","Face Pulls","Band Pull-Aparts"],
+};
+
+// ── LOG TAB ────────────────────────────────────────────────────────────────
+function LogTab({program, setProgram, logData, setLogData, videos, setVideos, currentWeek, setCurrentWeek}) {
+  const [expanded, setExpanded] = useState({mon:true, tue:true, wed:false, thu:false, fri:true, sat:false, sun:false});
+  const [editModal, setEditModal] = useState(null);  // {week,dayId,exIdx,mode:'edit'|'sub'|'add'}
+  const [playVideo, setPlayVideo] = useState(null);
+
+  const wData = program[currentWeek];
+  const lk = (d,ei,si,f) => `w${currentWeek}_${d}_${ei}_${si}_${f}`;
+  const rk = (d,f) => `r_w${currentWeek}_${d}_${f}`;
+  const getL = (d,ei,si,f) => logData[lk(d,ei,si,f)] || '';
+  const setL = (d,ei,si,f,v) => setLogData(p=>({...p,[lk(d,ei,si,f)]:v}));
+  const getR = (d,f) => logData[rk(d,f)] || '';
+  const setR = (d,f,v) => setLogData(p=>({...p,[rk(d,f)]:v}));
+
+  const getDayStatus = (day) => {
+    if (day.isRest) return 'rest';
+    const comps = day.exercises.filter(e=>e.isCompound);
+    if (!comps.length) return 'none';
+    const logged = comps.filter(ex => {
+      const ei = day.exercises.indexOf(ex);
+      return ex.sets.some((_,si) => getL(day.id,ei,si,'kg') || getL(day.id,ei,si,'rpe'));
+    });
+    if (!logged.length) return 'none';
+    return logged.length < comps.length ? 'partial' : 'done';
+  };
+
+  const getDayFatigue = (day) => {
+    if (day.isRest) return null;
+    const rpes = [];
+    day.exercises.forEach((ex,ei) => {
+      const v = getL(day.id,ei,0,'rpe');
+      if (v) rpes.push(parseFloat(v));
+    });
+    if (!rpes.length) return null;
+    return (rpes.reduce((a,b)=>a+b)/rpes.length).toFixed(1);
+  };
+
+  const updateEx = (dayId, exIdx, newEx) => {
+    setProgram(p => {
+      const next = JSON.parse(JSON.stringify(p));
+      next[currentWeek].days.find(d=>d.id===dayId).exercises[exIdx] = newEx;
+      return next;
+    });
+  };
+  const removeEx = (dayId, exIdx) => {
+    setProgram(p => {
+      const next = JSON.parse(JSON.stringify(p));
+      const day = next[currentWeek].days.find(d=>d.id===dayId);
+      day.exercises.splice(exIdx,1);
+      return next;
+    });
+  };
+  const addEx = (dayId) => {
+    setProgram(p => {
+      const next = JSON.parse(JSON.stringify(p));
+      const day = next[currentWeek].days.find(d=>d.id===dayId);
+      day.exercises.push({name:"New Exercise",targetRPE:null,sets:[{reps:"x10"},{reps:"x10"},{reps:"x10"}],isCompound:false});
+      return next;
+    });
+  };
+  const addSet = (dayId, exIdx) => {
+    setProgram(p => {
+      const next = JSON.parse(JSON.stringify(p));
+      const ex = next[currentWeek].days.find(d=>d.id===dayId).exercises[exIdx];
+      const last = ex.sets[ex.sets.length-1];
+      ex.sets.push({...last});
+      return next;
+    });
+  };
+  const removeSet = (dayId, exIdx, setIdx) => {
+    setProgram(p => {
+      const next = JSON.parse(JSON.stringify(p));
+      const ex = next[currentWeek].days.find(d=>d.id===dayId).exercises[exIdx];
+      if (ex.sets.length > 1) ex.sets.splice(setIdx,1);
+      return next;
+    });
+  };
+
+  const handleVideoUpload = (dayId, exIdx, files) => {
+    Array.from(files).forEach(file => {
+      const url = URL.createObjectURL(file);
+      const key = `v_w${currentWeek}_${dayId}_${exIdx}`;
+      setVideos(p => ({...p, [key]: [...(p[key]||[]), {url, name:file.name}]}));
+    });
+  };
+
+  const videoKey = (dayId, exIdx) => `v_w${currentWeek}_${dayId}_${exIdx}`;
+
+  return (
+    <div>
+      {/* WEEK BAR */}
+      <div className="weekbar">
+        {Object.entries(program).map(([wn, wd]) => {
+          const wInt = parseInt(wn);
+          const hasData = wd.days.some(d => !d.isRest && d.exercises.some((ex,ei) => ex.sets.some((_,si) => logData[`w${wInt}_${d.id}_${ei}_${si}_rpe`]||logData[`w${wInt}_${d.id}_${ei}_${si}_kg`])));
+          return (
+            <button key={wn} className={`wpill ${currentWeek===wInt?'active':''} ${hasData&&currentWeek!==wInt?'hasdata':''}`}
+              onClick={()=>setCurrentWeek(wInt)}>
+              W{wn} — {wd.phase}
+            </button>
+          );
+        })}
+      </div>
+
+      <div className="main">
+        <div className="sec-head">{wData?.label}</div>
+
+        {wData?.days.map(day => {
+          const isOpen = expanded[day.id] !== false;
+          const status = getDayStatus(day);
+          const fatigue = getDayFatigue(day);
+          const fatigueNum = parseFloat(fatigue)||0;
+
+          return (
+            <div key={day.id} className="day-card">
+              <div className="day-hdr" onClick={()=>setExpanded(p=>({...p,[day.id]:!isOpen}))}>
+                <div className={`day-status ${status}`} />
+                <div className="day-hdr-text">
+                  <div className="day-name">{day.name}</div>
+                  <div className="day-desc">{day.desc}</div>
+                </div>
+                {fatigue && (
+                  <div className={`day-rpe-badge ${fatigueNum>=8.5?'high':fatigueNum>=7.5?'mid':'low'}`}>
+                    avg {fatigue}
+                  </div>
+                )}
+                <div className={`day-chev ${isOpen?'open':''}`}>▼</div>
+              </div>
+
+              {isOpen && (
+                <div>
+                  {/* Readiness */}
+                  {!day.isRest && (
+                    <div className="readiness-row">
+                      {[['whoop','Whoop %'],['sleep','Sleep'],['bw','BW (kg)']].map(([f,l])=>(
+                        <div key={f} className="read-field">
+                          <div className="read-label">{l}</div>
+                          <input className="read-input" type="number" placeholder="—"
+                            value={getR(day.id,f)} onChange={e=>setR(day.id,f,e.target.value)} />
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {day.isRest ? (
+                    <div className="rest-day">// REST DAY</div>
+                  ) : (
+                    <div>
+                      <div className="ex-section" style={{overflowX:'auto'}}>
+                        {/* header */}
+                        <div className="ex-thead">
+                          {['Exercise','Target RPE','Set 1','Set 2','Set 3','Set 4','Act RPE','Signal',''].map((h,i)=>(
+                            <div key={i} className="ex-th">{h}</div>
+                          ))}
+                        </div>
+
+                        {day.exercises.map((ex, exIdx) => {
+                          const actRPE = getL(day.id,exIdx,0,'rpe') || '';
+                          return (
+                            <div key={exIdx}>
+                              <div className="ex-row">
+                                {/* name cell */}
+                                <div className="ex-name-cell">
+                                  <div className="ex-name" onClick={()=>setEditModal({dayId:day.id,exIdx,mode:'edit'})}>
+                                    {ex.name}
+                                  </div>
+                                  {ex.note && <div className="ex-note">{ex.note}</div>}
+                                  <div className="ex-actions">
+                                    <button className="ex-btn" onClick={()=>setEditModal({dayId:day.id,exIdx,mode:'sub'})}>SUB</button>
+                                    <button className="ex-btn" onClick={()=>setEditModal({dayId:day.id,exIdx,mode:'edit'})}>EDIT</button>
+                                    <button className="ex-btn danger" onClick={()=>{if(confirm('Remove '+ex.name+'?')) removeEx(day.id,exIdx)}}>✕</button>
+                                  </div>
+                                </div>
+                                {/* target rpe */}
+                                <div className="target-rpe-cell">{ex.targetRPE||'—'}</div>
+                                {/* sets */}
+                                {[0,1,2,3].map(si => {
+                                  const s = ex.sets[si];
+                                  if (!s) return (
+                                    <div key={si} className="set-cell">
+                                      {si === ex.sets.length && (
+                                        <button className="add-set-btn" style={{margin:'2px 0',fontSize:'9px',padding:'3px 8px'}}
+                                          onClick={()=>addSet(day.id,exIdx)}>+</button>
+                                      )}
+                                    </div>
+                                  );
+                                  const loggedKg = getL(day.id,exIdx,si,'kg');
+                                  const displayKg = loggedKg || (s.kg ? String(s.kg) : '');
+                                  return (
+                                    <div key={si} className="set-cell">
+                                      <div className="set-inputs">
+                                        <input className="kg-input" type="number" step="0.5"
+                                          placeholder={s.kg||'kg'}
+                                          value={loggedKg}
+                                          onChange={e=>setL(day.id,exIdx,si,'kg',e.target.value)} />
+                                        <button className="del-set-btn" onClick={()=>removeSet(day.id,exIdx,si)}>×</button>
+                                      </div>
+                                      <div className="set-reps">{s.reps}</div>
+                                    </div>
+                                  );
+                                })}
+                                {/* actual rpe */}
+                                <div className="rpe-cell">
+                                  {ex.isCompound ? (
+                                    <input className={`rpe-input ${rpeClass(actRPE, ex.targetRPE)}`}
+                                      type="number" step="0.5" placeholder="RPE"
+                                      value={actRPE}
+                                      onChange={e=>setL(day.id,exIdx,0,'rpe',e.target.value)} />
+                                  ) : <span style={{color:'var(--dim)',fontFamily:'Share Tech Mono,monospace',fontSize:10}}>—</span>}
+                                </div>
+                                {/* signal */}
+                                <div className="signal-cell">
+                                  {ex.isCompound
+                                    ? <Signal actual={actRPE} target={ex.targetRPE} />
+                                    : <span className="sig none">—</span>}
+                                </div>
+                                {/* add set overflow */}
+                                <div style={{display:'none'}} />
+                              </div>
+
+                              {/* Plate viz for compound sets with kg logged */}
+                              {ex.isCompound && (
+                                <div>
+                                  {ex.sets.slice(0,4).map((s,si)=>{
+                                    const k = getL(day.id,exIdx,si,'kg');
+                                    const kFinal = k || s.kg;
+                                    return kFinal ? <BarViz key={si} kg={kFinal} /> : null;
+                                  }).filter(Boolean)[0]}
+                                </div>
+                              )}
+
+                              {/* Video upload */}
+                              <div className="video-section">
+                                <div className="video-label">📹 {ex.name}</div>
+                                <label className="video-upload-btn" style={{cursor:'pointer'}}>
+                                  + Add Video
+                                  <input type="file" accept="video/*" multiple style={{display:'none'}}
+                                    onChange={e=>handleVideoUpload(day.id,exIdx,e.target.files)} />
+                                </label>
+                                {(videos[videoKey(day.id,exIdx)]||[]).map((v,vi)=>(
+                                  <div key={vi} className="video-thumb">
+                                    <video src={v.url} muted onClick={()=>setPlayVideo(v.url)} />
+                                    <button className="video-thumb-del"
+                                      onClick={()=>setVideos(p=>{
+                                        const next={...p};
+                                        next[videoKey(day.id,exIdx)]=next[videoKey(day.id,exIdx)].filter((_,i)=>i!==vi);
+                                        return next;
+                                      })}>×</button>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                      <button className="add-set-btn" onClick={()=>addEx(day.id)}>+ Add Exercise</button>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      {/* VIDEO FULLSCREEN */}
+      {playVideo && (
+        <div className="video-modal-overlay" onClick={()=>setPlayVideo(null)}>
+          <div className="video-modal-inner" onClick={e=>e.stopPropagation()}>
+            <button className="video-modal-close" onClick={()=>setPlayVideo(null)}>CLOSE</button>
+            <video src={playVideo} controls autoPlay style={{maxWidth:'100%',maxHeight:'80vh'}} />
+          </div>
+        </div>
+      )}
+
+      {/* EDIT MODAL */}
+      {editModal && editModal.mode === 'edit' && (()=>{
+        const day = wData.days.find(d=>d.id===editModal.dayId);
+        const ex = day.exercises[editModal.exIdx];
+        const [form, setForm] = useState({...ex, sets:[...ex.sets]});
+        return (
+          <div className="overlay" onClick={()=>setEditModal(null)}>
+            <div className="modal" onClick={e=>e.stopPropagation()}>
+              <div className="modal-title">Edit Exercise</div>
+              <div className="mfield">
+                <div className="mlabel">Name</div>
+                <input className="minput" value={form.name} onChange={e=>setForm(p=>({...p,name:e.target.value}))} />
+              </div>
+              <div className="mfield">
+                <div className="mlabel">Target RPE</div>
+                <input className="minput" value={form.targetRPE||''} placeholder="e.g. 7.5-8" onChange={e=>setForm(p=>({...p,targetRPE:e.target.value||null}))} />
+              </div>
+              <div className="mfield">
+                <div className="mlabel">Is Compound Lift?</div>
+                <select className="mselect" value={form.isCompound?'yes':'no'} onChange={e=>setForm(p=>({...p,isCompound:e.target.value==='yes'}))}>
+                  <option value="yes">Yes (tracks RPE + signal)</option>
+                  <option value="no">No (accessory)</option>
+                </select>
+              </div>
+              <div className="mfield">
+                <div className="mlabel">Coaching Note</div>
+                <input className="minput" value={form.note||''} placeholder="optional note..." onChange={e=>setForm(p=>({...p,note:e.target.value||undefined}))} />
+              </div>
+              <div className="mfield">
+                <div className="mlabel">Sets ({form.sets.length})</div>
+                {form.sets.map((s,i)=>(
+                  <div key={i} style={{display:'flex',gap:6,marginBottom:4,alignItems:'center'}}>
+                    <input className="minput" style={{width:70}} type="number" step="0.5" placeholder="kg" value={s.kg||''} onChange={e=>setForm(p=>{const sets=[...p.sets];sets[i]={...sets[i],kg:e.target.value?parseFloat(e.target.value):undefined};return{...p,sets}})} />
+                    <input className="minput" style={{width:90}} placeholder="reps" value={s.reps} onChange={e=>setForm(p=>{const sets=[...p.sets];sets[i]={...sets[i],reps:e.target.value};return{...p,sets}})} />
+                    <button className="mbtn-cancel" style={{padding:'4px 8px'}} onClick={()=>setForm(p=>({...p,sets:p.sets.filter((_,j)=>j!==i)}))}>—</button>
+                  </div>
+                ))}
+                <button className="add-set-btn" onClick={()=>setForm(p=>({...p,sets:[...p.sets,{...p.sets[p.sets.length-1]}]}))}>+ Set</button>
+              </div>
+              <div className="mactions">
+                <button className="mbtn-save" onClick={()=>{updateEx(editModal.dayId,editModal.exIdx,form);setEditModal(null)}}>SAVE</button>
+                <button className="mbtn-cancel" onClick={()=>setEditModal(null)}>Cancel</button>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
+
+      {/* SUB MODAL */}
+      {editModal && editModal.mode === 'sub' && (
+        <div className="overlay" onClick={()=>setEditModal(null)}>
+          <div className="modal" onClick={e=>e.stopPropagation()}>
+            <div className="modal-title">Substitute Exercise</div>
+            <div style={{fontFamily:'Share Tech Mono,monospace',fontSize:10,color:'var(--muted)',marginBottom:14}}>
+              replacing: {wData.days.find(d=>d.id===editModal.dayId).exercises[editModal.exIdx].name}
+            </div>
+            {Object.entries(SUBS).map(([cat, opts])=>(
+              <div key={cat} className="sub-cat">
+                <div className="sub-cat-label">{cat}</div>
+                <div className="sub-opts">
+                  {opts.map(opt=>(
+                    <button key={opt} className="sub-opt" onClick={()=>{
+                      setProgram(p=>{
+                        const next=JSON.parse(JSON.stringify(p));
+                        next[currentWeek].days.find(d=>d.id===editModal.dayId).exercises[editModal.exIdx].name=opt;
+                        return next;
+                      });
+                      setEditModal(null);
+                    }}>{opt}</button>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── NEXT WEEK TAB ──────────────────────────────────────────────────────────
+function NextWeekTab({program, setProgram, logData, currentWeek}) {
+  const [msgs, setMsgs] = useState([
+    {role:'ai',text:"Yo Austin. I know your training maxes, all your RPE data, and your progression rules. Tell me what you want for next week — heavier SBD, back off on bench, shift structure, whatever. Or just ask me to generate based on this week's numbers."}
+  ]);
+  const [input, setInput] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [pendingProgram, setPendingProgram] = useState(null);
+  const [pendingJSON, setPendingJSON] = useState(null);
+  const msgsRef = useRef(null);
+  const nextWk = currentWeek + 1;
+
+  useEffect(()=>{ if(msgsRef.current) msgsRef.current.scrollTop=9999; },[msgs,loading]);
+
+  const buildContext = () => {
+    let ctx = `ATHLETE: Austin Grogan, powerlifter
+COMP MAXES: Squat 232.7kg | Bench 142.4kg | Deadlift 265kg
+TRAINING MAXES: Squat ~214kg | Bench ~134kg | Deadlift ~247kg
+STYLE: Low-bar squat, sumo deadlift
+PHASE: Off-season. No RPE 9+. Sunday max RPE 6.5.
+UNIT: KG (competition calibrated plates, bar = 20kg)
+PROGRESSION RULES:
+- Under target RPE → +2.5kg next week
+- 0.5-1 over target → hold weight
+- 1.5+ over target → -2.5 to -5kg
+CURRENT WEEK: ${currentWeek} (${program[currentWeek]?.label} / ${program[currentWeek]?.phase})
+
+LOGGED DATA:
+`;
+    program[currentWeek]?.days.forEach(day => {
+      if (day.isRest) return;
+      ctx += `\n${day.name} (${day.desc}):\n`;
+      const whoop = logData[`r_w${currentWeek}_${day.id}_whoop`];
+      if (whoop) ctx += `  Whoop: ${whoop}%\n`;
+      day.exercises.forEach((ex, ei) => {
+        if (!ex.isCompound) return;
+        const rpe = logData[`w${currentWeek}_${day.id}_${ei}_0_rpe`];
+        const sets = ex.sets.map((_,si) => {
+          const kg = logData[`w${currentWeek}_${day.id}_${ei}_${si}_kg`];
+          return kg ? `${kg}kg` : null;
+        }).filter(Boolean);
+        if (sets.length || rpe) {
+          ctx += `  ${ex.name} — target RPE ${ex.targetRPE||'N/A'} — sets: ${sets.join(', ')||'not logged'} — actual RPE: ${rpe||'not logged'}\n`;
+        }
+      });
+    });
+    return ctx;
+  };
+
+  const send = async (overrideMsg) => {
+    const msg = overrideMsg || input.trim();
+    if (!msg || loading) return;
+    setInput('');
+    setMsgs(p=>[...p,{role:'user',text:msg}]);
+    setLoading(true);
+
+    const ctx = buildContext();
+    const systemPrompt = `You are an elite powerlifting coach AI for Austin Grogan. You know his full training context.
+
+When asked to build a week's program, respond with a JSON block AND a coaching summary. Format EXACTLY like:
+
+COACHING SUMMARY:
+[2-3 sentences about the week's adjustments and rationale]
+
+PROGRAM_JSON:
+{
+  "label": "Week ${nextWk}",
+  "phase": "...",
+  "days": [
+    {
+      "id": "mon", "name": "Monday", "desc": "...", "isRest": false,
+      "exercises": [
+        {"name": "...", "targetRPE": "...", "sets": [{"kg": 120, "reps": "x5"}, ...], "isCompound": true/false}
+      ]
+    },
+    {"id": "thu", "name": "Thursday", "desc": "Rest", "isRest": true, "exercises": []}
+  ]
+}
+
+For rest days, isRest=true and exercises=[].
+Always include all 7 days: mon, tue, wed, thu, fri, sat, sun.
+All weights in KG. Round to nearest 0.5kg.
+Keep compounds minimal, concise. Only key compound exercises need kg, accessories can have just reps.`;
+
+    try {
+      const history = msgs.filter(m=>m.role!=='system').map(m=>({role:m.role==='ai'?'assistant':m.role, content: m.text}));
+      history.push({role:'user', content: `${ctx}\n\nUser request: ${msg}`});
+
+      const res = await fetch(SCRIPT, {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({action:'chat', system: systemPrompt, messages: history})
+      });
+      const data = await res.json();
+      const text = data.response || data.error || 'Error';
+
+      // Try to parse JSON
+      const jsonMatch = text.match(/PROGRAM_JSON:\s*(\{[\s\S]*\})/);
+      if (jsonMatch) {
+        try {
+          const parsed = JSON.parse(jsonMatch[1]);
+          setPendingJSON(parsed);
+          // Build preview text
+          const preview = parsed.days.map(d=>{
+            if (d.isRest) return null;
+            const exLines = d.exercises.filter(e=>e.isCompound).map(e=>
+              `  ${e.name}: ${e.sets.map(s=>s.kg?`${s.kg}kg ${s.reps}`:s.reps).join(' | ')} @ RPE ${e.targetRPE||'—'}`
+            );
+            return exLines.length ? `${d.name.toUpperCase()} — ${d.desc}\n${exLines.join('\n')}` : null;
+          }).filter(Boolean).join('\n\n');
+          setPendingProgram(preview);
+          const coaching = text.split('PROGRAM_JSON:')[0].replace('COACHING SUMMARY:','').trim();
+          setMsgs(p=>[...p,{role:'ai',text:coaching}]);
+        } catch(e) {
+          setMsgs(p=>[...p,{role:'ai',text}]);
+        }
+      } else {
+        setMsgs(p=>[...p,{role:'ai',text}]);
+      }
+    } catch(e) {
+      setMsgs(p=>[...p,{role:'ai',text:'Connection error. Check Apps Script URL.'}]);
+    }
+    setLoading(false);
+  };
+
+  const commitProgram = () => {
+    if (!pendingJSON) return;
+    const wk = nextWk <= 6 ? nextWk : 7;
+    setProgram(p => {
+      const next = JSON.parse(JSON.stringify(p));
+      next[wk] = pendingJSON;
+      return next;
+    });
+    setPendingProgram(null);
+    setPendingJSON(null);
+    setMsgs(p=>[...p,{role:'ai',text:`Week ${wk} locked in. Navigate to it in the LOG tab.`}]);
+  };
+
+  return (
+    <div className="main">
+      <div className="sec-head">Next Week — AI Builder</div>
+      <div className="nw-layout">
+        {/* Chat column */}
+        <div className="nw-chat-col">
+          <div className="nw-chat-messages" ref={msgsRef}>
+            {msgs.map((m,i)=>(
+              <div key={i} className={`nw-msg ${m.role}`}>
+                <div className="nw-role">{m.role==='ai'?'COACH':'YOU'}</div>
+                <div className={`nw-bubble ${m.role}`}
+                  style={{whiteSpace:'pre-wrap'}}>{m.text}</div>
+              </div>
+            ))}
+            {loading && (
+              <div className="nw-msg ai">
+                <div className="nw-role">COACH</div>
+                <div className="nw-bubble ai"><div className="spin" /></div>
+              </div>
+            )}
+          </div>
+          <div className="nw-input-row">
+            <textarea className="nw-textarea"
+              placeholder="e.g. 'bench felt like shit this week, back off 5kg and add an extra set. squat felt good, push it'"
+              value={input}
+              onChange={e=>setInput(e.target.value)}
+              onKeyDown={e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send()}}} />
+            <button className="nw-send" onClick={()=>send()} disabled={loading||!input.trim()}>SEND</button>
+          </div>
+          <div style={{display:'flex',gap:6,flexWrap:'wrap'}}>
+            {["Generate Week "+nextWk+" based on this week's RPE",
+              "Build a deload week",
+              "Push SBD intensity up",
+              "More hypertrophy, less SBD frequency",
+              "Same structure, adjust weights only"
+            ].map(q=>(
+              <button key={q} style={{background:'var(--s2)',border:'1px solid var(--border)',color:'var(--muted)',cursor:'pointer',fontFamily:'Share Tech Mono,monospace',fontSize:9,padding:'5px 10px',letterSpacing:'.5px',transition:'all .12s'}}
+                onMouseOver={e=>{e.target.style.borderColor='var(--accent)';e.target.style.color='var(--accent)'}}
+                onMouseOut={e=>{e.target.style.borderColor='var(--border)';e.target.style.color='var(--muted)'}}
+                onClick={()=>send(q)}>{q}</button>
+            ))}
+          </div>
+        </div>
+
+        {/* Program preview column */}
+        <div className="nw-program-col">
+          {pendingProgram ? (
+            <div className="nw-program-card">
+              <div className="nw-prog-title">
+                Week {nextWk} Preview
+                <button className="nw-commit-btn" onClick={commitProgram}>COMMIT WEEK {nextWk} →</button>
+              </div>
+              <pre style={{fontFamily:'Share Tech Mono,monospace',fontSize:11,color:'var(--text)',lineHeight:1.7,whiteSpace:'pre-wrap'}}>{pendingProgram}</pre>
+            </div>
+          ) : (
+            <div className="nw-program-card" style={{opacity:.5}}>
+              <div className="nw-prog-title">Week {nextWk} Preview</div>
+              <div className="nw-prog-loading">
+                <span style={{fontFamily:'Share Tech Mono,monospace',fontSize:11,color:'var(--dim)'}}>
+                  Ask the coach to generate a program and it'll appear here for review before committing.
+                </span>
+              </div>
+            </div>
+          )}
+
+          {/* Current week summary */}
+          <div className="nw-program-card">
+            <div className="nw-prog-title" style={{fontSize:14}}>W{currentWeek} Compound Summary</div>
+            {program[currentWeek]?.days.filter(d=>!d.isRest).map(day=>{
+              const comps = day.exercises.filter(e=>e.isCompound);
+              if (!comps.length) return null;
+              return (
+                <div key={day.id} className="nw-prog-day">
+                  <div className="nw-prog-day-name">{day.name}</div>
+                  {comps.map((ex,i)=>{
+                    const ei = day.exercises.indexOf(ex);
+                    const rpe = logData[`w${currentWeek}_${day.id}_${ei}_0_rpe`];
+                    const kgs = ex.sets.map((_,si)=>logData[`w${currentWeek}_${day.id}_${ei}_${si}_kg`]).filter(Boolean);
+                    const sig = getSignal(rpe, ex.targetRPE);
+                    return (
+                      <div key={i} className="nw-prog-ex">
+                        <span className="nw-prog-ex-name">{ex.name}</span>
+                        <span className="nw-prog-ex-detail">
+                          {kgs.length ? kgs.join('/') + 'kg' : '—'}
+                          {rpe ? ` @ ${rpe}` : ''}
+                          {sig && <span style={{marginLeft:6,color:sig==='up'?'var(--green)':sig==='hold'?'var(--yellow)':'var(--red)'}}>{sig==='up'?'+2.5':sig==='hold'?'HOLD':'-2.5'}</span>}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── PROGRESS TAB ───────────────────────────────────────────────────────────
+function ProgressTab({program, logData}) {
+  const chartColors = {squat:'#d42b2b', bench:'#e8e8ea', deadlift:'#8a8fa0'};
+  const getData = () => {
+    const lifts = {squat:[],bench:[],deadlift:[]};
+    Object.entries(program).forEach(([wn,wd])=>{
+      wd.days.forEach(day=>{
+        day.exercises.forEach((ex,ei)=>{
+          if (!ex.isCompound) return;
+          const nm = ex.name.toLowerCase();
+          let key = nm.includes('squat')&&!nm.includes('pause')&&!nm.includes('speed') ? 'squat'
+            : nm.includes('bench')&&!nm.includes('pause') ? 'bench'
+            : nm.includes('deadlift')&&!nm.includes('pause')&&!nm.includes('speed') ? 'deadlift'
+            : null;
+          if (!key) return;
+          const wInt = parseInt(wn);
+          const maxKg = Math.max(...ex.sets.map((_,si)=>{
+            const logged = logData[`w${wInt}_${day.id}_${ei}_${si}_kg`];
+            return parseFloat(logged||ex.sets[si].kg)||0;
+          }));
+          if (maxKg>0) lifts[key].push({week:wInt,kg:maxKg});
+        });
+      });
+    });
+    return lifts;
+  };
+  const data = getData();
+  const allKgs = Object.values(data).flat().map(p=>p.kg).filter(Boolean);
+  const minKg = allKgs.length ? Math.min(...allKgs)-10 : 80;
+  const maxKg = allKgs.length ? Math.max(...allKgs)+10 : 300;
+  const W=680, H=200, PAD=50;
+
+  return (
+    <div className="main">
+      <div className="sec-head">Progress</div>
+      <div className="chart-card">
+        <div className="chart-title">Compound Peak Loads per Week</div>
+        <svg viewBox={`0 0 ${W+PAD} ${H+40}`} style={{width:'100%',overflow:'visible'}}>
+          {[0,.25,.5,.75,1].map(t=>{
+            const y = H - t*H + 10;
+            const val = Math.round(minKg + t*(maxKg-minKg));
+            return (
+              <g key={t}>
+                <line x1={PAD} y1={y} x2={W+PAD} y2={y} stroke="#1a1a1a" strokeWidth="1"/>
+                <text x={PAD-6} y={y+4} fill="#3a3a3a" fontSize="9" fontFamily="Share Tech Mono" textAnchor="end">{val}</text>
+              </g>
+            );
+          })}
+          {[1,2,3,4,5,6].map(w=>{
+            const x = PAD + (w-1)/(6-1)*(W);
+            return (
+              <g key={w}>
+                <line x1={x} y1={10} x2={x} y2={H+10} stroke="#111" strokeWidth="1"/>
+                <text x={x} y={H+26} fill="#3a3a3a" fontSize="9" fontFamily="Share Tech Mono" textAnchor="middle">W{w}</text>
+              </g>
+            );
+          })}
+          {Object.entries(data).map(([lift,pts])=>{
+            if (!pts.length) return null;
+            const color = chartColors[lift];
+            const plotPts = pts.map(p=>({
+              x: PAD + (p.week-1)/(6-1)*W,
+              y: H - ((p.kg-minKg)/(maxKg-minKg))*H + 10
+            }));
+            return (
+              <g key={lift}>
+                <polyline points={plotPts.map(p=>`${p.x},${p.y}`).join(' ')}
+                  fill="none" stroke={color} strokeWidth="1.5" strokeOpacity=".7"/>
+                {plotPts.map((p,i)=>(
+                  <g key={i}>
+                    <circle cx={p.x} cy={p.y} r="3.5" fill={color}/>
+                    <text x={p.x} y={p.y-7} fill={color} fontSize="9" fontFamily="Share Tech Mono" textAnchor="middle">{pts[i].kg}</text>
+                  </g>
+                ))}
+              </g>
+            );
+          })}
+        </svg>
+        <div className="chart-legend">
+          {Object.entries(chartColors).map(([k,c])=>(
+            <div key={k} className="cl-item"><div className="cl-dot" style={{background:c}}/>{k}</div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── APP ────────────────────────────────────────────────────────────────────
+function App() {
+  const [authed, setAuthed] = useState(false);
+  const [pw, setPw] = useState('');
+  const [pwErr, setPwErr] = useState(false);
+  const [tab, setTab] = useState('log');
+  const [currentWeek, setCurrentWeek] = useState(6);
+  const [logData, setLogData] = useState({});
+  const [program, setProgram] = useState(defaultProgram());
+  const [videos, setVideos] = useState({});
+
+  useEffect(()=>{
+    try{
+      const l=localStorage.getItem('ap_log_v3'); if(l) setLogData(JSON.parse(l));
+      const p=localStorage.getItem('ap_prog_v3'); if(p) setProgram(JSON.parse(p));
+    }catch(e){}
+  },[]);
+
+  useEffect(()=>{ try{localStorage.setItem('ap_log_v3',JSON.stringify(logData))}catch(e){} },[logData]);
+  useEffect(()=>{ try{localStorage.setItem('ap_prog_v3',JSON.stringify(program))}catch(e){} },[program]);
+
+  if (!authed) return (
+    <div className="gate">
+      <div className="gate-logo">
+        <div className="gate-logo-main">AUSTIN<br/><span style={{color:"var(--accent)"}}>POWERLIFTING</span></div>
+        <div className="gate-logo-sub">Personal Training System</div>
+      </div>
+      <div className="gate-form">
+        <div className="gate-pw-row">
+          <input className="gate-pw" type="password" placeholder="••••" value={pw}
+            onChange={e=>setPw(e.target.value)}
+            onKeyDown={e=>e.key==='Enter'&&(pw===PW?setAuthed(true):(setPwErr(true),setTimeout(()=>setPwErr(false),1400)))}
+            autoFocus />
+          <button className="gate-go" onClick={()=>pw===PW?setAuthed(true):(setPwErr(true),setTimeout(()=>setPwErr(false),1400))}>ENTER</button>
+        </div>
+        {pwErr && <div className="gate-err">// WRONG PASSWORD</div>}
+      </div>
+    </div>
+  );
+
+  return (
+    <div style={{display:'flex',flexDirection:'column',minHeight:'100vh'}}>
+      <div className="topbar">
+        <div className="topbar-brand">AUSTIN <em style={{color:"var(--accent)",fontStyle:"normal",fontWeight:900}}>POWERLIFTING</em></div>
+        <div className="topbar-nav">
+          {[['log','LOG'],['nextweek','NEXT WEEK'],['progress','PROGRESS'],['plates','PLATES']].map(([id,label])=>(
+            <button key={id} className={`tnav ${tab===id?'active':''}`} onClick={()=>setTab(id)}>{label}</button>
+          ))}
+        </div>
+        <div className="topbar-right">
+          <div className="maxes-strip">
+            <div className="max-item"><div className="max-label">SQ</div><div className="max-val">232.7</div></div>
+            <div className="max-item"><div className="max-label">BP</div><div className="max-val">142.4</div></div>
+            <div className="max-item"><div className="max-label">DL</div><div className="max-val">265</div></div>
+            <div className="max-item"><div className="max-label">UNIT</div><div className="max-val" style={{fontSize:12,color:'var(--muted)'}}>KG</div></div>
+          </div>
+        </div>
+      </div>
+
+      {tab === 'log' && (
+        <LogTab
+          program={program} setProgram={setProgram}
+          logData={logData} setLogData={setLogData}
+          videos={videos} setVideos={setVideos}
+          currentWeek={currentWeek} setCurrentWeek={setCurrentWeek} />
+      )}
+      {tab === 'nextweek' && (
+        <NextWeekTab program={program} setProgram={setProgram} logData={logData} currentWeek={currentWeek} />
+      )}
+      {tab === 'progress' && <ProgressTab program={program} logData={logData} />}
+      {tab === 'plates' && <div className="main"><PlateCalcTab /></div>}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
