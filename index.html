@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Austin Powerlifting</title>
+<title>AG 2026 PL Program</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
@@ -14,20 +14,37 @@
 html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Barlow',sans-serif;-webkit-font-smoothing:antialiased}
 #root{min-height:100vh;display:flex;flex-direction:column}
 /* GATE */
-.gate{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:32px;position:relative;overflow:hidden}
-.gate-bg{position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 59px,rgba(255,255,255,.012) 59px,rgba(255,255,255,.012) 60px),repeating-linear-gradient(90deg,transparent,transparent 59px,rgba(255,255,255,.012) 59px,rgba(255,255,255,.012) 60px);pointer-events:none}
-.gate-glow{position:absolute;top:40%;left:50%;transform:translate(-50%,-50%);width:700px;height:500px;background:radial-gradient(ellipse,rgba(212,43,43,.08) 0%,transparent 70%);pointer-events:none}
-.gate-logo{text-align:center;position:relative;z-index:1}
-.gate-title{font-family:'Barlow Condensed',sans-serif;font-size:76px;font-weight:900;letter-spacing:-2px;line-height:1;color:var(--tx)}
-.gate-title-red{color:var(--ac)}
-.gate-sub{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:6px;color:var(--mt);text-transform:uppercase;margin-top:6px}
-.gate-form{display:flex;flex-direction:column;align-items:center;gap:12px;position:relative;z-index:1}
-.gate-row{display:flex}
-.gate-pw{background:var(--s2);border:1px solid var(--bd2);border-right:none;color:var(--tx);font-family:'Share Tech Mono',monospace;font-size:24px;padding:12px 16px;width:140px;text-align:center;letter-spacing:10px;outline:none}
-.gate-pw:focus{border-color:var(--ac)}
-.gate-go{background:var(--ac);border:none;color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:19px;font-weight:700;letter-spacing:3px;padding:12px 24px;cursor:pointer;text-transform:uppercase}
-.gate-go:hover{background:var(--ac2)}
+.gate{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:40px;position:relative;overflow:hidden;background:#0a0a0b}
+.gate-bg{position:absolute;inset:0;background:
+  radial-gradient(ellipse 80% 60% at 50% 0%, rgba(180,20,20,.18) 0%, transparent 60%),
+  radial-gradient(ellipse 60% 40% at 50% 100%, rgba(0,0,0,.8) 0%, transparent 70%),
+  repeating-linear-gradient(0deg,transparent,transparent 79px,rgba(255,255,255,.015) 79px,rgba(255,255,255,.015) 80px),
+  repeating-linear-gradient(90deg,transparent,transparent 79px,rgba(255,255,255,.015) 79px,rgba(255,255,255,.015) 80px);
+  pointer-events:none}
+.gate-line-top{position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent 0%,var(--ac) 30%,var(--ac2) 50%,var(--ac) 70%,transparent 100%)}
+.gate-line-bot{position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(212,43,43,.3),transparent)}
+.gate-logo{text-align:center;position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:0}
+.gate-eyebrow{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:8px;color:rgba(212,43,43,.7);text-transform:uppercase;margin-bottom:12px;position:relative}
+.gate-eyebrow::before,.gate-eyebrow::after{content:'';position:absolute;top:50%;width:30px;height:1px;background:rgba(212,43,43,.4)}
+.gate-eyebrow::before{right:calc(100% + 10px)}.gate-eyebrow::after{left:calc(100% + 10px)}
+.gate-ag{font-family:'Barlow Condensed',sans-serif;font-size:120px;font-weight:900;line-height:.85;color:var(--tx);letter-spacing:-4px;position:relative}
+.gate-ag-shadow{position:absolute;inset:0;font-family:'Barlow Condensed',sans-serif;font-size:120px;font-weight:900;line-height:.85;letter-spacing:-4px;color:transparent;-webkit-text-stroke:1px rgba(212,43,43,.15);z-index:-1;transform:translate(3px,3px)}
+.gate-year{font-family:'Barlow Condensed',sans-serif;font-size:42px;font-weight:700;color:var(--ac);letter-spacing:8px;margin-top:4px}
+.gate-pl{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:400;color:var(--mt);letter-spacing:14px;text-transform:uppercase;margin-top:6px}
+.gate-divider{width:60px;height:2px;background:linear-gradient(90deg,transparent,var(--ac),transparent);margin:4px auto 0}
+.gate-form{display:flex;flex-direction:column;align-items:center;gap:14px;position:relative;z-index:1}
+.gate-row{display:flex;box-shadow:0 0 30px rgba(212,43,43,.08)}
+.gate-pw{background:rgba(30,30,32,.9);border:1px solid rgba(212,43,43,.25);border-right:none;color:var(--tx);font-family:'Share Tech Mono',monospace;font-size:22px;padding:14px 18px;width:150px;text-align:center;letter-spacing:12px;outline:none;transition:border-color .15s,box-shadow .15s;backdrop-filter:blur(4px)}
+.gate-pw:focus{border-color:var(--ac);box-shadow:0 0 0 1px rgba(212,43,43,.2) inset}
+.gate-go{background:var(--ac);border:none;color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:700;letter-spacing:4px;padding:14px 28px;cursor:pointer;text-transform:uppercase;transition:background .12s,box-shadow .12s;position:relative;overflow:hidden}
+.gate-go::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.08) 0%,transparent 100%)}
+.gate-go:hover{background:var(--ac2);box-shadow:0 4px 20px rgba(212,43,43,.4)}
 .gate-err{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--rd);letter-spacing:2px}
+.gate-stats{display:flex;gap:0;border:1px solid rgba(212,43,43,.15);background:rgba(20,20,22,.6);backdrop-filter:blur(4px)}
+.gate-stat{padding:10px 20px;text-align:center;border-right:1px solid rgba(212,43,43,.1)}
+.gate-stat:last-child{border-right:none}
+.gate-stat-val{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;color:var(--tx);line-height:1}
+.gate-stat-lbl{font-family:'Share Tech Mono',monospace;font-size:8px;color:rgba(212,43,43,.6);letter-spacing:2px;text-transform:uppercase;margin-top:2px}
 /* TOPBAR */
 .topbar{background:var(--s1);border-top:3px solid var(--ac);border-bottom:1px solid var(--bd);height:52px;display:flex;align-items:stretch;padding:0 16px;position:sticky;top:0;z-index:100}
 .brand{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;color:var(--tx);display:flex;align-items:center;padding-right:18px;border-right:1px solid var(--bd);white-space:nowrap;gap:5px}
@@ -209,8 +226,9 @@ var useState = React.useState;
 var useEffect = React.useEffect;
 var useRef = React.useRef;
 
-var PW = "1414";
-var SCRIPT = "https://script.google.com/macros/s/AKfycby6y22WT8IwMmBtIlYZvwYjv9aST-jZYRjIhoBmRzsoFJZ_t80g54YEP6nEQBTp36j_/exec";
+// ── PASTE YOUR WORKER URL HERE ─────────────────────────────────────────────
+var WORKER_URL = "https://YOUR-WORKER.YOUR-NAME.workers.dev";
+// ───────────────────────────────────────────────────────────────────────────
 
 // ── IPF PLATES (input in lbs, display IPF kg plates) ─────────────────────
 var BAR_LBS = 44.09; // 20kg
@@ -320,7 +338,8 @@ function makeProgram() {
         {name:"Bench Press",rpe:"7-7.5",sets:[{w:207,r:"x6"},{w:207,r:"x6"},{w:207,r:"x6"},{w:207,r:"x6"}],cp:true},
         {name:"Leg Extensions",rpe:null,sets:[{r:"x15"},{r:"x15"},{r:"x15"},{r:"x15"}],cp:false}
       ]},
-      {id:"wed",name:"Wednesday",desc:"Lower Accessories",isRest:false,exercises:[
+      {id:"wed",name:"Wednesday",desc:"Bench + Lower Accessories",isRest:false,exercises:[
+        {name:"Bench Press",rpe:"7-7.5",sets:[{w:215,r:"x5"},{w:215,r:"x5"},{w:215,r:"x5"},{w:215,r:"x5"}],cp:true,note:"Moderate volume day — stay in the 7-7.5 window"},
         {name:"Leg Press",rpe:null,sets:[{r:"x12"},{r:"x12"},{r:"x12"},{r:"x12"}],cp:false},
         {name:"RDL",rpe:null,sets:[{r:"x10"},{r:"x10"},{r:"x10"},{r:"x10"}],cp:false},
         {name:"Leg Curls",rpe:null,sets:[{r:"x15"},{r:"x15"},{r:"x15"},{r:"x15"}],cp:false},
@@ -358,7 +377,8 @@ function makeProgram() {
         {name:"Bench Press",rpe:"7-7.5",sets:[{w:210,r:"x6"},{w:210,r:"x6"},{w:210,r:"x6"},{w:210,r:"x6"}],cp:true},
         {name:"Leg Extensions",rpe:null,sets:[{r:"x15"},{r:"x15"},{r:"x15"},{r:"x15"}],cp:false}
       ]},
-      {id:"wed",name:"Wednesday",desc:"Lower Accessories",isRest:false,exercises:[
+      {id:"wed",name:"Wednesday",desc:"Bench + Lower Accessories",isRest:false,exercises:[
+        {name:"Bench Press",rpe:"7-7.5",sets:[{w:220,r:"x5"},{w:220,r:"x5"},{w:220,r:"x5"},{w:220,r:"x5"}],cp:true,note:"Moderate volume day — stay in the 7-7.5 window"},
         {name:"Leg Press",rpe:null,sets:[{r:"x12"},{r:"x12"},{r:"x12"},{r:"x12"}],cp:false},
         {name:"RDL",rpe:null,sets:[{r:"x10"},{r:"x10"},{r:"x10"},{r:"x10"}],cp:false},
         {name:"Leg Curls",rpe:null,sets:[{r:"x15"},{r:"x15"},{r:"x15"},{r:"x15"}],cp:false},
@@ -397,7 +417,8 @@ function makeProgram() {
         {name:"Bench Press",rpe:"7.5-8",sets:[{w:220,r:"x6"},{w:220,r:"x6"},{w:220,r:"x6"},{w:220,r:"x6"}],cp:true},
         {name:"Leg Extensions",rpe:null,sets:[{r:"x15"},{r:"x15"},{r:"x15"},{r:"x15"}],cp:false}
       ]},
-      {id:"wed",name:"Wednesday",desc:"Lower Accessories",isRest:false,exercises:[
+      {id:"wed",name:"Wednesday",desc:"Bench + Lower Accessories",isRest:false,exercises:[
+        {name:"Bench Press",rpe:"7-7.5",sets:[{w:225,r:"x5"},{w:225,r:"x5"},{w:225,r:"x5"},{w:225,r:"x5"}],cp:true,note:"Moderate volume day — stay in the 7-7.5 window"},
         {name:"Bulgarian Split Squats",rpe:"7-8",sets:[{r:"x8-10"},{r:"x8-10"},{r:"x8-10"},{r:"x8-10"}],cp:false},
         {name:"Hack Squat",rpe:"8.0",sets:[{r:"x10"},{r:"x10"},{r:"x10"}],cp:false},
         {name:"Leg Curls",rpe:null,sets:[{r:"x10-15"},{r:"x10-15"},{r:"x10-15"},{r:"x10-15"}],cp:false},
@@ -436,7 +457,8 @@ function makeProgram() {
         {name:"Bench Press",rpe:"8.0",sets:[{w:245,r:"x4"},{w:245,r:"x4"},{w:245,r:"x4"},{w:245,r:"x4"}],cp:true},
         {name:"Leg Extensions",rpe:null,sets:[{r:"x15"},{r:"x15"},{r:"x15"}],cp:false}
       ]},
-      {id:"wed",name:"Wednesday",desc:"Lower Accessories",isRest:false,exercises:[
+      {id:"wed",name:"Wednesday",desc:"Bench + Lower Accessories",isRest:false,exercises:[
+        {name:"Bench Press",rpe:"7-7.5",sets:[{w:230,r:"x5"},{w:230,r:"x5"},{w:230,r:"x5"},{w:230,r:"x5"}],cp:true,note:"Moderate volume day — stay in the 7-7.5 window"},
         {name:"Bulgarian Split Squats",rpe:"7-8",sets:[{r:"x8-10"},{r:"x8-10"},{r:"x8-10"},{r:"x8-10"}],cp:false},
         {name:"Hack Squat",rpe:"8.0",sets:[{r:"x10"},{r:"x10"},{r:"x10"}],cp:false},
         {name:"Leg Curls",rpe:null,sets:[{r:"x10-15"},{r:"x10-15"},{r:"x10-15"},{r:"x10-15"}],cp:false},
@@ -477,7 +499,8 @@ function makeProgram() {
         {name:"Pause Sumo Deadlift",rpe:"7-7.5",sets:[{w:440,r:"x4"},{w:440,r:"x3"},{w:440,r:"x3"}],cp:true},
         {name:"Leg Extensions",rpe:null,sets:[{r:"x15"},{r:"x15"},{r:"x15"}],cp:false}
       ]},
-      {id:"wed",name:"Wednesday",desc:"Lower Accessories",isRest:false,exercises:[
+      {id:"wed",name:"Wednesday",desc:"Bench + Lower Accessories",isRest:false,exercises:[
+        {name:"Bench Press",rpe:"7-7.5",sets:[{w:235,r:"x5"},{w:235,r:"x5"},{w:235,r:"x5"},{w:235,r:"x5"}],cp:true,note:"Moderate volume day — stay in the 7-7.5 window"},
         {name:"Smith Machine Split Squats",rpe:"7-8",sets:[{r:"x8-10"},{r:"x8-10"},{r:"x8-10"},{r:"x8-10"}],cp:false},
         {name:"Belt Squat",rpe:"8.0",sets:[{r:"x10"},{r:"x10"},{r:"x10"}],cp:false},
         {name:"Leg Curls",rpe:null,sets:[{r:"x10-15"},{r:"x10-15"},{r:"x10-15"},{r:"x10-15"}],cp:false},
@@ -518,7 +541,8 @@ function makeProgram() {
         {name:"Pause Deadlift",rpe:"7.5",sets:[{w:440,r:"x3"},{w:440,r:"x3"},{w:440,r:"x3"}],cp:true},
         {name:"Atlantis Leg Extension",rpe:null,sets:[{r:"x15"},{r:"x15"},{r:"x15"}],cp:false}
       ]},
-      {id:"wed",name:"Wednesday",desc:"Lower Accessories",isRest:false,exercises:[
+      {id:"wed",name:"Wednesday",desc:"Bench + Lower Accessories",isRest:false,exercises:[
+        {name:"Bench Press",rpe:"7-7.5",sets:[{w:235,r:"x4"},{w:235,r:"x4"},{w:235,r:"x4"},{w:235,r:"x4"}],cp:true,note:"Moderate volume — keep it crisp, no grinding"},
         {name:"Hip Thrust",rpe:"8",sets:[{r:"x8-10"},{r:"x8-10"},{r:"x8-10"},{r:"x8-10"}],cp:false},
         {name:"Leg Curl",rpe:"8",sets:[{r:"x10"},{r:"x10"},{r:"x10"},{r:"x12-15"}],cp:false},
         {name:"Atlantis Leg Extension",rpe:null,sets:[{r:"x12-15"},{r:"x12-15"},{r:"x12-15"},{r:"x12-15"}],cp:false},
@@ -808,6 +832,7 @@ function LogTab(props) {
 // ── NEXT WEEK ─────────────────────────────────────────────────────────────
 function NextWeekTab(props) {
   var prog=props.prog; var setProg=props.setProg; var log=props.log; var wk=props.wk;
+  var token=props.token; var workerUrl=props.workerUrl;
   var sm=useState([{role:"ai",text:"Yo Austin. I have all your RPE data, weights, and progression rules. Tell me what you want for next week or use one of the quick options."}]); var msgs=sm[0]; var setMsgs=sm[1];
   var si=useState(""); var inp=si[0]; var setInp=si[1];
   var sl=useState(false); var loading=sl[0]; var setLoading=sl[1];
@@ -850,30 +875,37 @@ function NextWeekTab(props) {
     var sys="You are an elite powerlifting coach AI for Austin Grogan.\n\nWhen generating a program respond EXACTLY in this format:\n\nCOACHING SUMMARY:\n[2-3 sentences]\n\nPROGRAM_JSON:\n{json}\n\nJSON structure: {\"label\":\"Week N\",\"phase\":\"...\",\"days\":[{\"id\":\"mon\",\"name\":\"Monday\",\"desc\":\"...\",\"isRest\":false,\"exercises\":[{\"name\":\"...\",\"rpe\":\"7.5\",\"sets\":[{\"w\":225,\"r\":\"x5\"},{\"w\":225,\"r\":\"x5\"}],\"cp\":true}]},{\"id\":\"thu\",\"name\":\"Thursday\",\"desc\":\"Rest\",\"isRest\":true,\"exercises\":[]}]}\n\nInclude ALL 7 days: mon tue wed thu fri sat sun. Rest days have isRest:true and exercises:[]. Weights in LBS. Accessories have cp:false and no w field needed.";
     var history=msgs.map(function(m){return {role:m.role==="ai"?"assistant":"user",content:m.text};});
     history.push({role:"user",content:ctx+"\n\nRequest: "+msg});
-    fetch(SCRIPT,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"chat",system:sys,messages:history})})
-      .then(function(r){return r.json();})
-      .then(function(data){
-        var text=data.response||data.error||"Error.";
-        var match=text.match(/PROGRAM_JSON:\s*(\{[\s\S]*\})\s*$/);
-        if(!match)match=text.match(/PROGRAM_JSON:\s*(\{[\s\S]*\})/);
-        if(match){
-          try{
-            var parsed=JSON.parse(match[1]);
-            setPendingJ(parsed);
-            var prev=parsed.days.filter(function(d){return !d.isRest;}).map(function(d){
-              var lines=d.exercises.filter(function(e){return e.cp;}).map(function(e){
-                return "  "+e.name+": "+e.sets.map(function(s){return (s.w?s.w+" lbs ":"")+s.r;}).join(" | ")+"  @RPE "+(e.rpe||"--");
-              });
-              return lines.length?d.name.toUpperCase()+" -- "+d.desc+"\n"+lines.join("\n"):null;
-            }).filter(Boolean).join("\n\n");
-            setPreview(prev);
-            var coaching=text.split("PROGRAM_JSON:")[0].replace("COACHING SUMMARY:","").trim();
-            setMsgs(function(p){return p.concat([{role:"ai",text:coaching}]);});
-          }catch(e){setMsgs(function(p){return p.concat([{role:"ai",text:text}]);});}
-        }else{setMsgs(function(p){return p.concat([{role:"ai",text:text}]);})}
-        setLoading(false);
-      })
-      .catch(function(){setMsgs(function(p){return p.concat([{role:"ai",text:"Connection error. Check Apps Script URL."}]);});setLoading(false);});
+    fetch(workerUrl+"/chat",{
+      method:"POST",
+      headers:{"Content-Type":"application/json","Authorization":"Bearer "+token},
+      body:JSON.stringify({system:sys,messages:history})
+    })
+    .then(function(r){return r.json();})
+    .then(function(data){
+      var text=data.response||data.error||"No response.";
+      var match=text.match(/PROGRAM_JSON:\s*(\{[\s\S]*\})\s*$/);
+      if(!match)match=text.match(/PROGRAM_JSON:\s*(\{[\s\S]*\})/);
+      if(match){
+        try{
+          var parsed=JSON.parse(match[1]);
+          setPendingJ(parsed);
+          var prev=parsed.days.filter(function(d){return !d.isRest;}).map(function(d){
+            var lines=d.exercises.filter(function(e){return e.cp;}).map(function(e){
+              return "  "+e.name+": "+e.sets.map(function(s){return (s.w?s.w+" lbs ":"")+s.r;}).join(" | ")+"  @RPE "+(e.rpe||"--");
+            });
+            return lines.length?d.name.toUpperCase()+" -- "+d.desc+"\n"+lines.join("\n"):null;
+          }).filter(Boolean).join("\n\n");
+          setPreview(prev);
+          var coaching=text.split("PROGRAM_JSON:")[0].replace("COACHING SUMMARY:","").trim();
+          setMsgs(function(p){return p.concat([{role:"ai",text:coaching||"Here's your week:"}]);});
+        }catch(e){setMsgs(function(p){return p.concat([{role:"ai",text:text}]);});}
+      }else{setMsgs(function(p){return p.concat([{role:"ai",text:text}]);})}
+      setLoading(false);
+    })
+    .catch(function(e){
+      setMsgs(function(p){return p.concat([{role:"ai",text:"Worker error: "+(e.message||"check your Worker is deployed and URL is correct")}]);});
+      setLoading(false);
+    });
   }
 
   function commit(){
@@ -935,6 +967,131 @@ function NextWeekTab(props) {
               );
             })}
           </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── COACH TAB ─────────────────────────────────────────────────────────────
+function CoachTab(props) {
+  var token=props.token; var workerUrl=props.workerUrl; var prog=props.prog; var log=props.log; var wk=props.wk;
+  var sm=useState([{role:"ai",text:"What's up. Ask me anything — form cues, why your bench sucks, how to peak, nutrition, recovery, whatever. I know your numbers and your program."}]); var msgs=sm[0]; var setMsgs=sm[1];
+  var si=useState(""); var inp=si[0]; var setInp=si[1];
+  var sl=useState(false); var loading=sl[0]; var setLoading=sl[1];
+  var msgsRef=useRef(null);
+
+  useEffect(function(){if(msgsRef.current)msgsRef.current.scrollTop=99999;},[msgs,loading]);
+
+  var SYSTEM = "You are an elite powerlifting coach for Austin Grogan. You know everything about him:\n\n" +
+    "ATHLETE: Austin Grogan, 23 years old, NYC\n" +
+    "COMP MAXES (lbs): Squat 513 | Bench 314 | Deadlift 584 | Total 1411\n" +
+    "STYLE: Low-bar squat, sumo deadlift. Bench is his weak lift.\n" +
+    "BODY: ~200 lbs, competing at 90kg\n" +
+    "PROGRAM: Off-season 6-week block. 3x bench/week (his weak lift), heavy SBD 3-4x/week.\n" +
+    "RPE RULES: No RPE 9+ off-season. Sunday max RPE 6.5. Under target = +5 lbs, 0.5-1 over = hold, 1.5+ over = -5 to -10 lbs.\n" +
+    "RECOVERY: Tracks Whoop. <34% = back off. 34-66% = moderate. 67%+ = normal.\n\n" +
+    "Respond like a knowledgeable coach who is also a real person — direct, no fluff, no corporate speak. " +
+    "Short answers unless the question needs depth. Use lbs. Don't over-explain basics he already knows as a competitive lifter.";
+
+  var QUICK = [
+    "Why is my bench lagging?",
+    "How should I peak for a meet?",
+    "Is sumo cheating lol",
+    "How do I fix slow off the floor on deadlift?",
+    "What should I eat on training days?",
+    "How long should I rest between heavy sets?",
+    "When should I take a deload?",
+    "How do I improve my squat depth?",
+  ];
+
+  function send(override) {
+    var msg = override || inp.trim();
+    if (!msg || loading) return;
+    setInp("");
+    setMsgs(function(p){ return p.concat([{role:"user", text:msg}]); });
+    setLoading(true);
+
+    var history = msgs.map(function(m){ return {role: m.role==="ai"?"assistant":"user", content: m.text}; });
+    history.push({role:"user", content:msg});
+
+    fetch(workerUrl+"/chat", {
+      method:"POST",
+      headers:{"Content-Type":"application/json","Authorization":"Bearer "+token},
+      body:JSON.stringify({system:SYSTEM, messages:history})
+    })
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      var text = data.response || data.error || "No response.";
+      setMsgs(function(p){ return p.concat([{role:"ai", text:text}]); });
+      setLoading(false);
+    })
+    .catch(function(e){
+      setMsgs(function(p){ return p.concat([{role:"ai", text:"Worker error: "+(e.message||"check your Worker URL")}]); });
+      setLoading(false);
+    });
+  }
+
+  return (
+    <div className="main" style={{maxWidth:"720px"}}>
+      <div className="sh">Coach</div>
+      <div style={{display:"flex",flexDirection:"column",gap:"8px",height:"calc(100vh - 160px)",minHeight:"400px"}}>
+        <div ref={msgsRef} style={{flex:1,background:"var(--s1)",border:"1px solid var(--bd)",overflowY:"auto",padding:"16px",display:"flex",flexDirection:"column",gap:"12px"}}>
+          {msgs.map(function(m,i){
+            var isAI = m.role==="ai";
+            return (
+              <div key={i} style={{display:"flex",flexDirection:"column",gap:"3px",alignItems:isAI?"flex-start":"flex-end"}}>
+                <div style={{fontFamily:"Share Tech Mono,monospace",fontSize:"8px",color:"var(--mt)",letterSpacing:"1.5px",textTransform:"uppercase"}}>
+                  {isAI?"COACH":"YOU"}
+                </div>
+                <div style={{
+                  padding:"10px 14px",fontSize:"14px",lineHeight:"1.65",maxWidth:"85%",
+                  background:isAI?"var(--s3)":"var(--ac)",
+                  border:isAI?"1px solid var(--bd2)":"none",
+                  color:isAI?"var(--tx)":"#fff",
+                  whiteSpace:"pre-wrap",
+                  fontFamily:"'Barlow',sans-serif"
+                }}>{m.text}</div>
+              </div>
+            );
+          })}
+          {loading&&(
+            <div style={{display:"flex",flexDirection:"column",gap:"3px",alignItems:"flex-start"}}>
+              <div style={{fontFamily:"Share Tech Mono,monospace",fontSize:"8px",color:"var(--mt)",letterSpacing:"1.5px"}}>COACH</div>
+              <div style={{padding:"10px 14px",background:"var(--s3)",border:"1px solid var(--bd2)"}}>
+                <div className="spin"></div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div style={{display:"flex"}}>
+          <textarea
+            style={{flex:1,background:"var(--s2)",border:"1px solid var(--bd)",borderRight:"none",color:"var(--tx)",fontFamily:"'Barlow',sans-serif",fontSize:"14px",padding:"11px 14px",resize:"none",outline:"none",height:"52px",lineHeight:"1.5"}}
+            placeholder="Ask your coach anything..."
+            value={inp}
+            onChange={function(e){setInp(e.target.value);}}
+            onKeyDown={function(e){if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();send(null);}}}
+          />
+          <button
+            disabled={loading||!inp.trim()}
+            onClick={function(){send(null);}}
+            style={{background:"var(--ac)",border:"none",color:"#fff",cursor:"pointer",fontFamily:"'Barlow Condensed',sans-serif",fontSize:"15px",fontWeight:700,letterSpacing:"2px",padding:"0 20px",opacity:(loading||!inp.trim())?.35:1}}>
+            SEND
+          </button>
+        </div>
+
+        <div style={{display:"flex",gap:"5px",flexWrap:"wrap"}}>
+          {QUICK.map(function(q){
+            return (
+              <button key={q} onClick={function(){send(q);}}
+                style={{background:"var(--s2)",border:"1px solid var(--bd)",color:"var(--mt)",cursor:"pointer",fontFamily:"Share Tech Mono,monospace",fontSize:"8px",padding:"5px 10px",letterSpacing:".5px",transition:"all .12s"}}
+                onMouseOver={function(e){e.target.style.borderColor="var(--ac)";e.target.style.color="var(--ac)";}}
+                onMouseOut={function(e){e.target.style.borderColor="var(--bd)";e.target.style.color="var(--mt)";}}>
+                {q}
+              </button>
+            );
+          })}
         </div>
       </div>
     </div>
@@ -1044,39 +1201,162 @@ function ProgressTab(props) {
 
 // ── APP ───────────────────────────────────────────────────────────────────
 function App() {
-  var s1=useState(false);var authed=s1[0];var setAuthed=s1[1];
-  var s2=useState("");var pw=s2[0];var setPw=s2[1];
-  var s3=useState(false);var err=s3[0];var setErr=s3[1];
-  var s4=useState("log");var tab=s4[0];var setTab=s4[1];
-  var s5=useState(6);var wk=s5[0];var setWk=s5[1];
-  var s6=useState({});var log=s6[0];var setLog=s6[1];
-  var s7=useState(makeProgram());var prog=s7[0];var setProg=s7[1];
-  var s8=useState({});var vids=s8[0];var setVids=s8[1];
+  var s1=useState(null);  var token=s1[0];  var setToken=s1[1];   // null=loading, ""=logged out, "abc..."=authed
+  var s2=useState("");   var pw=s2[0];      var setPw=s2[1];
+  var s3=useState(false);var err=s3[0];     var setErr=s3[1];
+  var s4=useState("log");var tab=s4[0];     var setTab=s4[1];
+  var s5=useState(6);    var wk=s5[0];      var setWk=s5[1];
+  var s6=useState({});   var log=s6[0];     var setLog=s6[1];
+  var s7=useState(null); var prog=s7[0];    var setProg=s7[1];     // null = not loaded yet
+  var s8=useState({});   var vids=s8[0];    var setVids=s8[1];
+  var s9=useState("");   var syncMsg=s9[0]; var setSyncMsg=s9[1];
+  var s10=useState(false);var booting=s10[0];var setBooting=s10[1];
 
+  // On mount: check localStorage for saved token, try to load data
   useEffect(function(){
-    try{var l=localStorage.getItem("ap5_log");if(l)setLog(JSON.parse(l));var p=localStorage.getItem("ap5_prog");if(p)setProg(JSON.parse(p));}catch(e){}
-  },[]);
-  useEffect(function(){try{localStorage.setItem("ap5_log",JSON.stringify(log));}catch(e){};},[log]);
-  useEffect(function(){try{localStorage.setItem("ap5_prog",JSON.stringify(prog));}catch(e){};},[prog]);
+    var saved = localStorage.getItem("ap_token");
+    if (saved) {
+      setToken(saved);
+      loadData(saved);
+    } else {
+      setToken(""); // not logged in
+    }
+  }, []);
 
-  function tryLogin(){if(pw===PW){setAuthed(true);}else{setErr(true);setTimeout(function(){setErr(false);},1400);}}
+  // Auto-save log + prog to Worker whenever they change (debounced)
+  var saveTimer = useRef(null);
+  useEffect(function(){
+    if (!token || !prog) return;
+    clearTimeout(saveTimer.current);
+    saveTimer.current = setTimeout(function(){
+      saveData(token, log, prog);
+    }, 1500);
+  }, [log, prog]);
 
-  if(!authed){
+  function loadData(t) {
+    setBooting(true);
+    fetch(WORKER_URL + "/data", {
+      headers: { "Authorization": "Bearer " + t }
+    })
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      if (data.error) { setToken(""); localStorage.removeItem("ap_token"); setBooting(false); return; }
+      setLog(data.log || {});
+      setProg(data.prog || makeProgram());
+      setBooting(false);
+    })
+    .catch(function(){
+      // Worker unreachable — fall back to localStorage
+      try {
+        var l = localStorage.getItem("ap5_log"); if(l) setLog(JSON.parse(l));
+        var p = localStorage.getItem("ap5_prog"); if(p) setProg(JSON.parse(p)); else setProg(makeProgram());
+      } catch(e){ setProg(makeProgram()); }
+      setBooting(false);
+      setSyncMsg("Worker offline — using local data");
+    });
+  }
+
+  function saveData(t, logData, progData) {
+    fetch(WORKER_URL + "/data", {
+      method: "POST",
+      headers: { "Authorization": "Bearer " + t, "Content-Type": "application/json" },
+      body: JSON.stringify({ log: logData, prog: progData })
+    })
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      if (data.ok) setSyncMsg("synced " + new Date().toLocaleTimeString());
+      else setSyncMsg("sync error");
+    })
+    .catch(function(){
+      // fall back to localStorage
+      try { localStorage.setItem("ap5_log", JSON.stringify(logData)); localStorage.setItem("ap5_prog", JSON.stringify(progData)); } catch(e){}
+      setSyncMsg("offline — saved locally");
+    });
+  }
+
+  function tryLogin() {
+    if (!pw) return;
+    fetch(WORKER_URL + "/auth", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ password: pw })
+    })
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      if (data.token) {
+        localStorage.setItem("ap_token", data.token);
+        setToken(data.token);
+        loadData(data.token);
+      } else {
+        setErr(true); setTimeout(function(){ setErr(false); }, 1400);
+      }
+    })
+    .catch(function(){
+      // Worker down — fall back to hardcoded password
+      if (pw === "1414") {
+        var fallbackToken = "offline";
+        localStorage.setItem("ap_token", fallbackToken);
+        setToken(fallbackToken);
+        try { var l=localStorage.getItem("ap5_log"); if(l) setLog(JSON.parse(l)); var p=localStorage.getItem("ap5_prog"); if(p) setProg(JSON.parse(p)); else setProg(makeProgram()); } catch(e){ setProg(makeProgram()); }
+        setSyncMsg("Worker offline — using local data");
+      } else {
+        setErr(true); setTimeout(function(){ setErr(false); }, 1400);
+      }
+    });
+  }
+
+  // Still checking token
+  if (token === null) {
+    return (
+      <div style={{minHeight:"100vh",display:"flex",alignItems:"center",justifyContent:"center",background:"var(--bg)"}}>
+        <div className="spin" style={{width:"20px",height:"20px",borderWidth:"3px"}}></div>
+      </div>
+    );
+  }
+
+  // Not logged in
+  if (!token) {
     return (
       <div className="gate">
         <div className="gate-bg"></div>
-        <div className="gate-glow"></div>
+        <div className="gate-line-top"></div>
+        <div className="gate-line-bot"></div>
         <div className="gate-logo">
-          <div className="gate-title">AUSTIN<br/><span className="gate-title-red">POWERLIFTING</span></div>
-          <div className="gate-sub">Personal Training System</div>
+          <div className="gate-eyebrow">Austin Grogan</div>
+          <div className="gate-ag" style={{position:"relative"}}>
+            <span style={{display:"block"}}>AG</span>
+            <div className="gate-ag-shadow">AG</div>
+          </div>
+          <div className="gate-year">2026</div>
+          <div className="gate-divider"></div>
+          <div className="gate-pl">Powerlifting Program</div>
+        </div>
+        <div className="gate-stats">
+          <div className="gate-stat"><div className="gate-stat-val">513</div><div className="gate-stat-lbl">Squat</div></div>
+          <div className="gate-stat"><div className="gate-stat-val">314</div><div className="gate-stat-lbl">Bench</div></div>
+          <div className="gate-stat"><div className="gate-stat-val">584</div><div className="gate-stat-lbl">Dead</div></div>
+          <div className="gate-stat"><div className="gate-stat-val">1411</div><div className="gate-stat-lbl">Total</div></div>
         </div>
         <div className="gate-form">
           <div className="gate-row">
-            <input className="gate-pw" type="password" placeholder="----" value={pw} onChange={function(e){setPw(e.target.value);}} onKeyDown={function(e){if(e.key==="Enter")tryLogin();}} autoFocus/>
+            <input className="gate-pw" type="password" placeholder="----" value={pw}
+              onChange={function(e){setPw(e.target.value);}}
+              onKeyDown={function(e){if(e.key==="Enter")tryLogin();}}
+              autoFocus/>
             <button className="gate-go" onClick={tryLogin}>ENTER</button>
           </div>
-          {err&&<div className="gate-err">// WRONG PASSWORD</div>}
+          {err&&<div className="gate-err">// ACCESS DENIED</div>}
         </div>
+      </div>
+    );
+  }
+
+  // Loading data after login
+  if (booting || !prog) {
+    return (
+      <div style={{minHeight:"100vh",display:"flex",alignItems:"center",justifyContent:"center",background:"var(--bg)",flexDirection:"column",gap:"12px"}}>
+        <div className="spin" style={{width:"20px",height:"20px",borderWidth:"3px"}}></div>
+        <div style={{fontFamily:"Share Tech Mono,monospace",fontSize:"11px",color:"var(--mt)",letterSpacing:"2px"}}>LOADING DATA...</div>
       </div>
     );
   }
@@ -1084,22 +1364,22 @@ function App() {
   return (
     <div style={{display:"flex",flexDirection:"column",minHeight:"100vh"}}>
       <div className="topbar">
-        <div className="brand">AUSTIN <span className="brand-red">POWERLIFTING</span></div>
+        <div className="brand">AG <span className="brand-red">2026</span></div>
         <div className="topnav">
-          {[["log","LOG"],["nextweek","NEXT WEEK"],["progress","PROGRESS"],["plates","PLATES"]].map(function(item){
+          {[["log","LOG"],["nextweek","NEXT WEEK"],["coach","COACH"]].map(function(item){
             return <button key={item[0]} className={"tnav"+(tab===item[0]?" on":"")} onClick={function(){setTab(item[0]);}}>{item[1]}</button>;
           })}
         </div>
         <div className="topright">
+          {syncMsg && <span style={{fontFamily:"Share Tech Mono,monospace",fontSize:"8px",color:"var(--mt)",letterSpacing:"1px"}}>{syncMsg}</span>}
           {[["SQ","513"],["BP","314"],["DL","584"]].map(function(m){
             return <div key={m[0]} className="mi"><div className="mi-label">{m[0]}</div><div className="mi-val">{m[1]}</div></div>;
           })}
         </div>
       </div>
       {tab==="log"&&<LogTab prog={prog} setProg={setProg} log={log} setLog={setLog} vids={vids} setVids={setVids} wk={wk} setWk={setWk}/>}
-      {tab==="nextweek"&&<NextWeekTab prog={prog} setProg={setProg} log={log} wk={wk}/>}
-      {tab==="progress"&&<ProgressTab prog={prog} log={log}/>}
-      {tab==="plates"&&<PlatesTab/>}
+      {tab==="nextweek"&&<NextWeekTab prog={prog} setProg={setProg} log={log} wk={wk} token={token} workerUrl={WORKER_URL}/>}
+      {tab==="coach"&&<CoachTab token={token} workerUrl={WORKER_URL} prog={prog} log={log} wk={wk}/>}
     </div>
   );
 }
